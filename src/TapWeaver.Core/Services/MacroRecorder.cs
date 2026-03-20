@@ -16,6 +16,7 @@ public class MacroRecorder : IDisposable
     private long _lastEventTime = 0;
     private bool _isRecording;
     private readonly object _lock = new();
+    private const int MinDelayThresholdMs = 50;
 
     public event Action<MacroStep>? StepRecorded;
     public bool IsRecording => _isRecording;
@@ -131,7 +132,7 @@ public class MacroRecorder : IDisposable
     {
         long now = _stopwatch.ElapsedMilliseconds;
         long delta = now - _lastEventTime;
-        if (_steps.Count > 0 && delta > 50)
+        if (_steps.Count > 0 && delta > MinDelayThresholdMs)
         {
             var delay = new MacroStep { Type = MacroStepType.Delay, DelayMs = (int)delta };
             lock (_lock) { _steps.Add(delay); }

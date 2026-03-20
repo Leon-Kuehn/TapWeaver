@@ -61,6 +61,9 @@ public class SequencerViewModel : ViewModelBase
     public RelayCommand OpenCommand { get; }
     public RelayCommand NewCommand { get; }
 
+    private const string DefaultStepKey = "A";
+    private const int DefaultStepHoldMs = 100;
+
     public SequencerViewModel(MacroPlayer player)
     {
         _player = player;
@@ -119,7 +122,7 @@ public class SequencerViewModel : ViewModelBase
 
     private void AddStep()
     {
-        var step = new MacroStep { Type = MacroStepType.KeyTap, Key = "A", HoldMs = 100 };
+        var step = new MacroStep { Type = MacroStepType.KeyTap, Key = DefaultStepKey, HoldMs = DefaultStepHoldMs };
         var vm = new MacroStepViewModel(step);
         if (SelectedStep != null)
         {
