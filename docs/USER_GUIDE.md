@@ -6,7 +6,10 @@
 3. [Playback and Repeat Options](#3-playback-and-repeat-options)
 4. [The Auto Clicker](#4-the-auto-clicker)
 5. [Saving and Loading Macros](#5-saving-and-loading-macros)
-6. [JSON Format Reference](#6-json-format-reference)
+6. [Global Hotkeys](#6-global-hotkeys)
+7. [Emergency Stop](#7-emergency-stop)
+8. [Settings](#8-settings)
+9. [JSON Format Reference](#9-json-format-reference)
 
 ---
 
@@ -86,31 +89,95 @@ During playback the currently executing step is highlighted in blue in the grid.
 
 ## 5. Saving and Loading Macros
 
-- **Save / Save As…** — saves the current macro to a `.json` file.
-- **Open…** — loads a macro from a `.json` file.
+- **Save / Save As…** — saves the current macro (with name and optional description) to a `.json` profile file.
+- **Open…** — loads a macro profile from a `.json` file.  Legacy plain-macro files (without a profile wrapper) are loaded automatically.
 - **New** — clears the editor for a fresh macro.
 
 ---
 
-## 6. JSON Format Reference
+## 6. Global Hotkeys
+
+TapWeaver registers global hotkeys that work even when the application is running in the background.
+
+| Function               | Default hotkey | Configurable? |
+|------------------------|---------------|---------------|
+| Toggle macro playback  | Ctrl+F8       | ✅ Yes        |
+| Toggle macro recording | Ctrl+F7       | ✅ Yes        |
+| Toggle auto-clicker    | Ctrl+F9       | ✅ Yes        |
+| Emergency Stop         | Ctrl+Alt+Pause| ❌ Fixed      |
+
+To change a configurable hotkey:
+1. Open the **Settings** tab.
+2. Click the hotkey field next to the function you want to change.
+3. Press your desired key combination (at least one modifier key — Ctrl, Alt, or Shift — is required).
+4. The new combination is applied and saved immediately.
+5. Press **Reset** to restore the factory default.
+
+> **Note:** Hotkeys require at least one modifier key. A hotkey cannot be fully cleared; it always falls back to a safe default.
+
+---
+
+## 7. Emergency Stop
+
+**Hotkey: `Ctrl + Alt + Pause`** (fixed, cannot be disabled)
+
+The emergency-stop hotkey is always active while TapWeaver is running — even when the window is minimised or not focused. When pressed, it will:
+
+1. Stop any running macro playback.
+2. Stop the auto-clicker.
+3. Stop any ongoing recording.
+4. Release all modifier keys (Ctrl, Alt, Shift, Win) that may have been left held down by a macro.
+5. Release all mouse buttons (left, right, middle) that may be stuck in the "down" state.
+
+You can also trigger the emergency stop manually by clicking the **🛑 Emergency Stop Now** button in the **Settings** tab.
+
+> **Tip:** If you find yourself unable to control the computer because a macro is running too fast or looping, press **Ctrl + Alt + Pause** to immediately halt everything.
+
+---
+
+## 8. Settings
+
+Open the **Settings** tab to configure:
+
+| Setting             | Description                                                   |
+|---------------------|---------------------------------------------------------------|
+| Always on top       | Keeps the TapWeaver window above all other windows.           |
+| Toggle Playback     | Global hotkey to start/stop macro playback (default Ctrl+F8). |
+| Toggle Recording    | Global hotkey to start/stop recording (default Ctrl+F7).      |
+| Toggle Auto Clicker | Global hotkey to start/stop the auto-clicker (default Ctrl+F9).|
+
+Settings are persisted between sessions in `%AppData%\TapWeaver\settings.json`.
+
+---
+
+## 9. JSON Format Reference
 
 ```json
 {
-  "name": "Example Macro",
-  "version": 1,
-  "repeatMode": "Infinite",
-  "repeatCount": 0,
-  "loopDelayMs": 0,
-  "steps": [
-    { "type": "KeyTap",    "key": "A", "holdMs": 3000 },
-    { "type": "Delay",     "delayMs": 200 },
-    { "type": "KeyTap",    "key": "D", "holdMs": 1500 },
-    { "type": "Delay",     "delayMs": 100 },
-    { "type": "KeyTap",    "key": "W", "holdMs": 1300 },
-    { "type": "MouseClick","button": "Left", "x": 960, "y": 540 },
-    { "type": "MoveMouse", "x": 100, "y": 200 }
-  ]
+  "name": "Example Profile",
+  "description": "Holds A, D, W in a loop",
+  "created": "2024-01-01T00:00:00Z",
+  "modified": "2024-06-01T12:00:00Z",
+  "macro": {
+    "name": "Example Macro",
+    "version": 1,
+    "repeatMode": "Infinite",
+    "repeatCount": 0,
+    "loopDelayMs": 0,
+    "steps": [
+      { "type": "KeyTap",    "key": "A", "holdMs": 3000 },
+      { "type": "Delay",     "delayMs": 200 },
+      { "type": "KeyTap",    "key": "D", "holdMs": 1500 },
+      { "type": "Delay",     "delayMs": 100 },
+      { "type": "KeyTap",    "key": "W", "holdMs": 1300 },
+      { "type": "MouseClick","button": "Left", "x": 960, "y": 540 },
+      { "type": "MoveMouse", "x": 100, "y": 200 }
+    ]
+  }
 }
 ```
 
-You can edit this file in any text editor and reload it via **Open…**.
+> **Tip:** Legacy files that contain only the plain `Macro` object (without a `macro` wrapper) are still
+> supported — TapWeaver loads them automatically.
+
+You can edit profile files in any text editor and reload them via **Open…**.
