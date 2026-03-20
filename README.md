@@ -19,9 +19,13 @@ Think of it as a *TinyTask++*: ultra-simple to use, but with far more control.
 ### ✏️ Manual Sequence Editor
 - Build macros entirely by hand with a clean DataGrid editor
 - Step types: `KeyDown`, `KeyUp`, `KeyTap`, `Delay`, `MouseClick`, `MoveMouse`
+- `KeyTap` steps simulate a real key-down + hold for the configured duration + key-up using `SendInput` — clean, precise, never blocks the system
 - Inline editing of key names, durations, delays, and coordinates
 - Add, duplicate, delete, and reorder steps (move up/down)
 - Save and load macros as human-readable **JSON** files
+- Dedicated **Sequencer Start/Stop hotkey** (default Ctrl+F8) — toggle playback from any window; the hotkey is shown directly in the Sequencer tab
+- Macro editing is automatically disabled (greyed out) while a macro is running
+- Status bar shows: `Idle` / `Running…` / `Stopped by user` / `Stopped by emergency hotkey`
 
 ### 🖱 Auto Clicker
 - High-performance clicking using `SendInput` and a `Stopwatch`-based scheduler
@@ -34,6 +38,7 @@ Think of it as a *TinyTask++*: ultra-simple to use, but with far more control.
 - Fixed emergency-stop hotkey **Ctrl+Alt+Pause** — always active, even when minimised
   - Immediately stops playback, the auto-clicker, and any recording
   - Releases all stuck modifier keys and mouse buttons
+  - The Sequencer status bar shows **"Stopped by emergency hotkey"** when triggered
 - All critical functions have configurable global hotkeys (Ctrl+F7 / F8 / F9 by default)
 - Debounced hotkey handling prevents accidental rapid-fire toggles
 

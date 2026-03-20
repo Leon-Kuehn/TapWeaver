@@ -71,7 +71,26 @@
 | Repeat Count   | integer ≥ 1         | Used when Repeat Mode = Count                        |
 | Loop Delay (ms)| integer ≥ 0         | Pause between successive loop iterations             |
 
-During playback the currently executing step is highlighted in blue in the grid.
+During playback:
+
+- The currently executing step is **highlighted in blue** in the grid.
+- The settings card and DataGrid editor are **greyed out** (editing is disabled while running).
+- A **▶ Running…** indicator appears next to the Play/Stop buttons.
+- The status bar in the bottom of the Sequencer tab shows one of:
+  - `Idle` — no macro has been played yet, or the last run completed normally.
+  - `Running…` — a macro is currently executing.
+  - `Stopped by user` — the user pressed **⏹ Stop** or the Sequencer hotkey.
+  - `Stopped by emergency hotkey` — the fixed **Ctrl+Alt+Pause** hotkey was used.
+
+### How `KeyTap` steps work
+
+A `KeyTap` step simulates a real, clean key-press:
+
+1. Sends a **KeyDown** event for the configured key.
+2. Waits for exactly the **Hold (ms)** duration (using a background timer — the UI stays responsive).
+3. Sends a **KeyUp** event.
+
+If playback is stopped early, all keys that are currently held down are automatically released — no "stuck key" issues.
 
 ---
 
@@ -99,12 +118,14 @@ During playback the currently executing step is highlighted in blue in the grid.
 
 TapWeaver registers global hotkeys that work even when the application is running in the background.
 
-| Function               | Default hotkey | Configurable? |
-|------------------------|---------------|---------------|
-| Toggle macro playback  | Ctrl+F8       | ✅ Yes        |
-| Toggle macro recording | Ctrl+F7       | ✅ Yes        |
-| Toggle auto-clicker    | Ctrl+F9       | ✅ Yes        |
-| Emergency Stop         | Ctrl+Alt+Pause| ❌ Fixed      |
+| Function                         | Default hotkey | Configurable? |
+|----------------------------------|---------------|---------------|
+| Sequencer Playback (Start/Stop)  | Ctrl+F8       | ✅ Yes        |
+| Toggle macro recording           | Ctrl+F7       | ✅ Yes        |
+| Toggle auto-clicker              | Ctrl+F9       | ✅ Yes        |
+| Emergency Stop                   | Ctrl+Alt+Pause| ❌ Fixed      |
+
+The active **Sequencer Playback** hotkey is displayed directly in the **Sequencer** tab (next to the Play/Stop buttons). Pressing it while playback is stopped will start the currently loaded macro; pressing it while playback is running will stop it.
 
 To change a configurable hotkey:
 1. Open the **Settings** tab.
@@ -123,7 +144,7 @@ To change a configurable hotkey:
 
 The emergency-stop hotkey is always active while TapWeaver is running — even when the window is minimised or not focused. When pressed, it will:
 
-1. Stop any running macro playback.
+1. Stop any running macro playback (the Sequencer status changes to **"Stopped by emergency hotkey"**).
 2. Stop the auto-clicker.
 3. Stop any ongoing recording.
 4. Release all modifier keys (Ctrl, Alt, Shift, Win) that may have been left held down by a macro.
@@ -139,12 +160,12 @@ You can also trigger the emergency stop manually by clicking the **🛑 Emergenc
 
 Open the **Settings** tab to configure:
 
-| Setting             | Description                                                   |
-|---------------------|---------------------------------------------------------------|
-| Always on top       | Keeps the TapWeaver window above all other windows.           |
-| Toggle Playback     | Global hotkey to start/stop macro playback (default Ctrl+F8). |
-| Toggle Recording    | Global hotkey to start/stop recording (default Ctrl+F7).      |
-| Toggle Auto Clicker | Global hotkey to start/stop the auto-clicker (default Ctrl+F9).|
+| Setting                         | Description                                                           |
+|----------------------------------|-----------------------------------------------------------------------|
+| Always on top                    | Keeps the TapWeaver window above all other windows.                   |
+| Sequencer Playback (Start/Stop)  | Global hotkey to start/stop sequencer playback (default Ctrl+F8).    |
+| Toggle Recording                 | Global hotkey to start/stop recording (default Ctrl+F7).             |
+| Toggle Auto Clicker              | Global hotkey to start/stop the auto-clicker (default Ctrl+F9).      |
 
 Settings are persisted between sessions in `%AppData%\TapWeaver\settings.json`.
 

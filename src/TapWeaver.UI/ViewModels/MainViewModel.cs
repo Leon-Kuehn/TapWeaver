@@ -161,7 +161,7 @@ public class MainViewModel : ViewModelBase, IDisposable
     /// </summary>
     public void EmergencyStop()
     {
-        _macroPlayer.Stop();
+        _macroPlayer.Stop(PlaybackStopReason.EmergencyStop);
         _autoClickerService.Stop();
         if (_macroRecorder.IsRecording)
             _macroRecorder.Stop();
