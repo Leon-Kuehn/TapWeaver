@@ -1,0 +1,112 @@
+<UserControl x:Class="TapWeaver.UI.Views.AutoClickerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Auto Clicker" FontSize="22" FontWeight="Bold"
+                   Foreground="#212121" Margin="0,0,0,16"/>
+
+        <!-- Status Card -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Status" Style="{StaticResource FieldLabelStyle}"/>
+                    <TextBlock FontSize="28" FontWeight="Bold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="OFF"/>
+                                <Setter Property="Foreground" Value="#757575"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                        <Setter Property="Text" Value="ON"/>
+                                        <Setter Property="Foreground" Value="#4CAF50"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Start" Style="{StaticResource SuccessButtonStyle}"
+                            Command="{Binding StartCommand}" MinWidth="100" Height="44"
+                            Margin="0,0,12,0" FontSize="15"/>
+                    <Button Content="Stop" Style="{StaticResource DangerButtonStyle}"
+                            Command="{Binding StopCommand}" MinWidth="100" Height="44"
+                            FontSize="15"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Settings Card -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <TextBlock Text="Configuration" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left Column -->
+                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                        <!-- CPS -->
+                        <TextBlock Text="Clicks per Second (CPS)" Style="{StaticResource FieldLabelStyle}"/>
+                        <TextBox Text="{Binding Cps, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBoxStyle}" Width="160" HorizontalAlignment="Left"
+                                 ToolTip="Number of clicks per second"
+                                 Margin="0,0,0,16"/>
+
+                        <!-- Mouse Button -->
+                        <TextBlock Text="Click Type" Style="{StaticResource FieldLabelStyle}"/>
+                        <ComboBox ItemsSource="{Binding MouseButtons}"
+                                  SelectedItem="{Binding Button}"
+                                  Style="{StaticResource ModernComboBoxStyle}" Width="160" HorizontalAlignment="Left"
+                                  Margin="0,0,0,16"/>
+                    </StackPanel>
+
+                    <!-- Right Column -->
+                    <StackPanel Grid.Column="1">
+                        <!-- Position Mode -->
+                        <TextBlock Text="Click Position" Style="{StaticResource FieldLabelStyle}"/>
+                        <StackPanel Margin="0,0,0,8">
+                            <RadioButton Content="Follow cursor (click where mouse is)"
+                                         IsChecked="{Binding UseFixedPosition, Converter={StaticResource InverseBoolConverter}}"
+                                         Margin="0,0,0,8"/>
+                            <RadioButton Content="Fixed position"
+                                         IsChecked="{Binding UseFixedPosition}"
+                                         Margin="0,0,0,8"/>
+                        </StackPanel>
+
+                        <!-- Fixed Position Fields -->
+                        <StackPanel Orientation="Horizontal"
+                                    IsEnabled="{Binding UseFixedPosition}">
+                            <StackPanel Margin="0,0,12,0">
+                                <TextBlock Text="X" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox Text="{Binding FixedX, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBoxStyle}" Width="80"
+                                         ToolTip="X screen coordinate"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Y" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox Text="{Binding FixedY, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBoxStyle}" Width="80"
+                                         ToolTip="Y screen coordinate"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

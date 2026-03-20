@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TapWeaver.Core/TapWeaver.Core.csproj" />
+    <Project Path="src/TapWeaver.Persistence/TapWeaver.Persistence.csproj" />
+    <Project Path="src/TapWeaver.UI/TapWeaver.UI.csproj" />
+  </Folder>
+</Solution>
