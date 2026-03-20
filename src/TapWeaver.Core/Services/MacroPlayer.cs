@@ -8,11 +8,17 @@ public class MacroPlayer
 {
     private CancellationTokenSource? _cts;
     private readonly Dictionary<ushort, bool> _pressedKeys = new();
-    
+    private PlaybackStopReason _pendingStopReason = PlaybackStopReason.Completed;
+
     public event Action<int>? StepChanged;
     public event Action? PlaybackStarted;
-    public event Action? PlaybackStopped;
-    
+
+    /// <summary>
+    /// Raised when playback ends for any reason.
+    /// The <see cref="PlaybackStopReason"/> argument indicates why it stopped.
+    /// </summary>
+    public event Action<PlaybackStopReason>? PlaybackStopped;
+
     public bool IsPlaying { get; private set; }
     
     private static readonly Dictionary<string, ushort> KeyMap = new(StringComparer.OrdinalIgnoreCase)
@@ -49,13 +55,21 @@ public class MacroPlayer
     {
         if (IsPlaying) return;
         _cts = new CancellationTokenSource();
+        _pendingStopReason = PlaybackStopReason.Completed;
         IsPlaying = true;
         PlaybackStarted?.Invoke();
         Task.Run(() => RunPlayback(macro, _cts.Token));
     }
 
-    public void Stop()
+    /// <summary>
+    /// Stops playback immediately.
+    /// </summary>
+    /// <param name="reason">
+    /// The reason playback is being stopped.  Defaults to <see cref="PlaybackStopReason.UserStop"/>.
+    /// </param>
+    public void Stop(PlaybackStopReason reason = PlaybackStopReason.UserStop)
     {
+        _pendingStopReason = reason;
         _cts?.Cancel();
         ReleaseAllKeys();
     }
@@ -92,7 +106,11 @@ public class MacroPlayer
             ReleaseAllKeys();
             IsPlaying = false;
             StepChanged?.Invoke(-1);
-            PlaybackStopped?.Invoke();
+            // If playback finished all iterations without cancellation it completed normally.
+            var reason = _cts?.IsCancellationRequested == true
+                ? _pendingStopReason
+                : PlaybackStopReason.Completed;
+            PlaybackStopped?.Invoke(reason);
         }
     }
 

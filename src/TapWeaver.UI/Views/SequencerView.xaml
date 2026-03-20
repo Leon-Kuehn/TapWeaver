@@ -34,6 +34,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
@@ -41,7 +42,8 @@
                 <StackPanel Grid.Column="0" Margin="0,0,16,0">
                     <TextBlock Text="Macro Name" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding MacroName, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBoxStyle}" Width="180" HorizontalAlignment="Left"/>
+                             Style="{StaticResource ModernTextBoxStyle}" Width="180" HorizontalAlignment="Left"
+                             IsEnabled="{Binding IsEditable}"/>
                 </StackPanel>
 
                 <!-- Description -->
@@ -49,7 +51,8 @@
                     <TextBlock Text="Description (optional)" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding ProfileDescription, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBoxStyle}" Width="180" HorizontalAlignment="Left"
-                             ToolTip="Short description stored in the profile JSON"/>
+                             ToolTip="Short description stored in the profile JSON"
+                             IsEnabled="{Binding IsEditable}"/>
                 </StackPanel>
 
                 <!-- Repeat Mode -->
@@ -57,7 +60,8 @@
                     <TextBlock Text="Repeat Mode" Style="{StaticResource FieldLabelStyle}"/>
                     <ComboBox ItemsSource="{Binding RepeatModes}"
                               SelectedItem="{Binding RepeatMode}"
-                              Style="{StaticResource ModernComboBoxStyle}" Width="110"/>
+                              Style="{StaticResource ModernComboBoxStyle}" Width="110"
+                              IsEnabled="{Binding IsEditable}"/>
                 </StackPanel>
 
                 <!-- Repeat Count -->
@@ -65,7 +69,8 @@
                     <TextBlock Text="Repeat Count" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding RepeatCount, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBoxStyle}" Width="80"
-                             ToolTip="Number of times to repeat (for Count mode)"/>
+                             ToolTip="Number of times to repeat (for Count mode)"
+                             IsEnabled="{Binding IsEditable}"/>
                 </StackPanel>
 
                 <!-- Loop Delay -->
@@ -73,15 +78,29 @@
                     <TextBlock Text="Loop Delay (ms)" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding LoopDelayMs, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBoxStyle}" Width="100"
-                             ToolTip="Delay between loop iterations in milliseconds"/>
+                             ToolTip="Delay between loop iterations in milliseconds"
+                             IsEnabled="{Binding IsEditable}"/>
+                </StackPanel>
+
+                <!-- Hotkey info + Running indicator -->
+                <StackPanel Grid.Column="5" VerticalAlignment="Bottom" Margin="0,0,16,0">
+                    <TextBlock Style="{StaticResource FieldLabelStyle}" Text="Hotkey"/>
+                    <TextBlock FontSize="12" Foreground="#546E7A" VerticalAlignment="Center"
+                               Text="{Binding DataContext.PlaybackHotkeyText, RelativeSource={RelativeSource AncestorType=Window}}"
+                               ToolTip="Configurable global hotkey — change it in the Settings tab"/>
+                    <!-- Running indicator (only visible during playback) -->
+                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="#1565C0" Margin="0,4,0,0"
+                               Visibility="{Binding IsPlaying, Converter={StaticResource BoolToVisibilityConverter}}">
+                        ▶ Running…
+                    </TextBlock>
                 </StackPanel>
 
                 <!-- Playback Controls -->
-                <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Bottom">
-                    <Button Content="Play" Style="{StaticResource SuccessButtonStyle}"
+                <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Button Content="▶ Play" Style="{StaticResource SuccessButtonStyle}"
                             Command="{Binding PlayCommand}" MinWidth="80" Height="36" Margin="0,0,8,0"
                             ToolTip="Start macro playback"/>
-                    <Button Content="Stop" Style="{StaticResource DangerButtonStyle}"
+                    <Button Content="⏹ Stop" Style="{StaticResource DangerButtonStyle}"
                             Command="{Binding StopCommand}" MinWidth="80" Height="36"
                             ToolTip="Stop macro playback"/>
                 </StackPanel>
@@ -97,7 +116,8 @@
                 </Grid.RowDefinitions>
 
                 <!-- Toolbar -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12"
+                            IsEnabled="{Binding IsEditable}">
                     <Button Content="+ Add Step" Style="{StaticResource PrimaryButtonStyle}"
                             Command="{Binding AddStepCommand}" Height="32" Margin="0,0,8,0"/>
                     <Button Content="Duplicate" Style="{StaticResource SecondaryButtonStyle}"
@@ -117,7 +137,8 @@
                           CanUserDeleteRows="False" GridLinesVisibility="Horizontal"
                           HeadersVisibility="Column" Background="Transparent"
                           BorderThickness="1" BorderBrush="#E0E0E0"
-                          RowHeaderWidth="0" FontSize="13">
+                          RowHeaderWidth="0" FontSize="13"
+                          IsEnabled="{Binding IsEditable}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Type" Width="130">
                             <DataGridTemplateColumn.CellTemplate>

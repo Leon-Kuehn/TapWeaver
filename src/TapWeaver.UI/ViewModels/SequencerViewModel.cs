@@ -18,7 +18,7 @@ public class SequencerViewModel : ViewModelBase
     private string? _currentFilePath;
     private DateTime _profileCreated = DateTime.UtcNow;
     private int _currentStepIndex = -1;
-    private string _status = "Ready";
+    private string _status = "Idle";
 
     public ObservableCollection<MacroStepViewModel> Steps { get; } = new();
     public MacroStepViewModel? SelectedStep
@@ -35,6 +35,9 @@ public class SequencerViewModel : ViewModelBase
     public int LoopDelayMs { get => _loopDelayMs; set => SetProperty(ref _loopDelayMs, value); }
     public string Status { get => _status; set => SetProperty(ref _status, value); }
     public bool IsPlaying => _player.IsPlaying;
+
+    /// <summary>True when the sequencer is not running; controls whether the editor UI is enabled.</summary>
+    public bool IsEditable => !_player.IsPlaying;
     
     public int CurrentStepIndex
     {
@@ -74,16 +77,25 @@ public class SequencerViewModel : ViewModelBase
         {
             CurrentStepIndex = idx;
             OnPropertyChanged(nameof(IsPlaying));
+            OnPropertyChanged(nameof(IsEditable));
         });
         _player.PlaybackStarted += () => Application.Current?.Dispatcher.BeginInvoke(() =>
         {
-            Status = "Playing...";
+            Status = "Running…";
             OnPropertyChanged(nameof(IsPlaying));
+            OnPropertyChanged(nameof(IsEditable));
         });
-        _player.PlaybackStopped += () => Application.Current?.Dispatcher.BeginInvoke(() =>
+        _player.PlaybackStopped += reason => Application.Current?.Dispatcher.BeginInvoke(() =>
         {
-            Status = "Stopped";
+            Status = reason switch
+            {
+                PlaybackStopReason.Completed     => "Idle",
+                PlaybackStopReason.UserStop      => "Stopped by user",
+                PlaybackStopReason.EmergencyStop => "Stopped by emergency hotkey",
+                _                                => "Idle"
+            };
             OnPropertyChanged(nameof(IsPlaying));
+            OnPropertyChanged(nameof(IsEditable));
         });
 
         PlayCommand = new RelayCommand(Play, () => !_player.IsPlaying && Steps.Count > 0);
@@ -238,6 +250,6 @@ public class SequencerViewModel : ViewModelBase
         LoopDelayMs = 0;
         _profileCreated = DateTime.UtcNow;
         Steps.Clear();
-        Status = "New macro";
+        Status = "New macro – add steps and press Play";
     }
 }

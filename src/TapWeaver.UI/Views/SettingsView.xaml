@@ -70,7 +70,7 @@
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Toggle Macro Playback:"
+                        <TextBlock Grid.Column="0" Text="Sequencer Playback (Start/Stop):"
                                    FontSize="13" VerticalAlignment="Center"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="PlaybackHotkeyBox"

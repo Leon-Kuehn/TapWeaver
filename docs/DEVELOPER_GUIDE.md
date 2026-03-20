@@ -50,9 +50,12 @@ All input simulation uses `SendInput` (Win32), which works reliably across most 
 #### `MacroPlayer`
 - Runs on a background `Task` (never blocks the UI thread).
 - Iterates steps and executes them via `InputSimulator`.
-- `KeyTap` uses `Task.Delay` for the hold duration with cancellation support.
-- Tracks currently pressed keys; on stop or cancellation all keys are released automatically.
-- Raises `StepChanged`, `PlaybackStarted`, `PlaybackStopped` events (marshal to UI thread in ViewModels).
+- `KeyTap` simulates a real key press: sends `SendInput` KeyDown, awaits `Task.Delay` for the hold duration (cancellation-aware), then sends `SendInput` KeyUp.
+- All key down/up events are sent via `InputSimulator.SendKeyDown` / `SendKeyUp` (Win32 `SendInput`).
+- Tracks currently pressed keys in a `_pressedKeys` dictionary; on stop or cancellation all keys are released via `ReleaseAllKeys()`, preventing "stuck key" situations.
+- `Stop(PlaybackStopReason)` accepts a reason so the UI can display distinct messages (`Idle` / `Running…` / `Stopped by user` / `Stopped by emergency hotkey`).
+- Raises `StepChanged(int index)`, `PlaybackStarted`, and `PlaybackStopped(PlaybackStopReason)` events — marshal to UI thread in ViewModels.
+- `PlaybackStopReason` enum (`Completed`, `UserStop`, `EmergencyStop`) lives in `TapWeaver.Core.Services`.
 
 #### `AutoClickerService`
 - Runs a tight `Task` loop; uses `Task.Delay` to schedule intervals from `1000.0 / CPS`.
