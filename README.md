@@ -30,6 +30,19 @@ Think of it as a *TinyTask++*: ultra-simple to use, but with far more control.
 - Position mode: follow the cursor, or click at a fixed screen coordinate (X, Y)
 - Start/Stop via UI buttons or a configurable global hotkey
 
+### 🛑 Emergency Stop & Global Safety Hotkeys
+- Fixed emergency-stop hotkey **Ctrl+Alt+Pause** — always active, even when minimised
+  - Immediately stops playback, the auto-clicker, and any recording
+  - Releases all stuck modifier keys and mouse buttons
+- All critical functions have configurable global hotkeys (Ctrl+F7 / F8 / F9 by default)
+- Debounced hotkey handling prevents accidental rapid-fire toggles
+
+### ⚙️ Settings & Profiles
+- Always-on-top window mode (toggle in Settings or title bar)
+- Hotkey assignments are user-configurable and persist between sessions
+- Macros are saved as **MacroProfile** JSON files (name, description, timestamps + macro)
+- Full backward compatibility with legacy plain-macro JSON files
+
 ---
 
 ## Installation

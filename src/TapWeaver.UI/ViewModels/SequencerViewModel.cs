@@ -11,10 +11,12 @@ public class SequencerViewModel : ViewModelBase
 {
     private readonly MacroPlayer _player;
     private string _macroName = "New Macro";
+    private string _profileDescription = "";
     private RepeatMode _repeatMode = RepeatMode.Once;
     private int _repeatCount = 1;
     private int _loopDelayMs = 0;
     private string? _currentFilePath;
+    private DateTime _profileCreated = DateTime.UtcNow;
     private int _currentStepIndex = -1;
     private string _status = "Ready";
 
@@ -27,6 +29,7 @@ public class SequencerViewModel : ViewModelBase
     private MacroStepViewModel? _selectedStep;
 
     public string MacroName { get => _macroName; set => SetProperty(ref _macroName, value); }
+    public string ProfileDescription { get => _profileDescription; set => SetProperty(ref _profileDescription, value); }
     public RepeatMode RepeatMode { get => _repeatMode; set => SetProperty(ref _repeatMode, value); }
     public int RepeatCount { get => _repeatCount; set => SetProperty(ref _repeatCount, value); }
     public int LoopDelayMs { get => _loopDelayMs; set => SetProperty(ref _loopDelayMs, value); }
@@ -108,6 +111,13 @@ public class SequencerViewModel : ViewModelBase
         Status = $"Loaded {macro.Steps.Count} steps";
     }
 
+    public void LoadProfile(MacroProfile profile)
+    {
+        ProfileDescription = profile.Description;
+        _profileCreated = profile.Created;
+        LoadMacro(profile.Macro);
+    }
+
     private Macro BuildMacro() => new Macro
     {
         Name = MacroName,
@@ -115,6 +125,14 @@ public class SequencerViewModel : ViewModelBase
         RepeatCount = RepeatCount,
         LoopDelayMs = LoopDelayMs,
         Steps = Steps.Select(s => s.Step).ToList()
+    };
+
+    private MacroProfile BuildProfile() => new MacroProfile
+    {
+        Name        = MacroName,
+        Description = ProfileDescription,
+        Created     = _profileCreated,
+        Macro       = BuildMacro()
     };
 
     private void Play() => _player.Play(BuildMacro());
@@ -172,7 +190,7 @@ public class SequencerViewModel : ViewModelBase
     {
         if (_currentFilePath == null) { SaveAs(); return; }
         var path = _currentFilePath;
-        MacroSerializer.SaveAsync(BuildMacro(), path).ContinueWith(t =>
+        MacroSerializer.SaveProfileAsync(BuildProfile(), path).ContinueWith(t =>
         {
             Application.Current?.Dispatcher.BeginInvoke(() =>
                 Status = t.IsFaulted ? $"Save failed: {t.Exception?.GetBaseException().Message}" : "Saved");
@@ -187,7 +205,7 @@ public class SequencerViewModel : ViewModelBase
             _currentFilePath = dlg.FileName;
             var path = _currentFilePath;
             var name = System.IO.Path.GetFileName(path);
-            MacroSerializer.SaveAsync(BuildMacro(), path).ContinueWith(t =>
+            MacroSerializer.SaveProfileAsync(BuildProfile(), path).ContinueWith(t =>
             {
                 Application.Current?.Dispatcher.BeginInvoke(() =>
                     Status = t.IsFaulted ? $"Save failed: {t.Exception?.GetBaseException().Message}" : $"Saved to {name}");
@@ -201,11 +219,11 @@ public class SequencerViewModel : ViewModelBase
         if (dlg.ShowDialog() == true)
         {
             _currentFilePath = dlg.FileName;
-            var task = MacroSerializer.LoadAsync(_currentFilePath);
+            var task = MacroSerializer.LoadProfileAsync(_currentFilePath);
             task.ContinueWith(t =>
             {
                 if (t.Result != null)
-                    Application.Current?.Dispatcher.Invoke(() => LoadMacro(t.Result));
+                    Application.Current?.Dispatcher.Invoke(() => LoadProfile(t.Result));
             });
         }
     }
@@ -214,9 +232,11 @@ public class SequencerViewModel : ViewModelBase
     {
         _currentFilePath = null;
         MacroName = "New Macro";
+        ProfileDescription = "";
         RepeatMode = RepeatMode.Once;
         RepeatCount = 1;
         LoopDelayMs = 0;
+        _profileCreated = DateTime.UtcNow;
         Steps.Clear();
         Status = "New macro";
     }

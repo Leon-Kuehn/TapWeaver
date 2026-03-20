@@ -29,7 +29,8 @@
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -40,11 +41,19 @@
                 <StackPanel Grid.Column="0" Margin="0,0,16,0">
                     <TextBlock Text="Macro Name" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding MacroName, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBoxStyle}" Width="200" HorizontalAlignment="Left"/>
+                             Style="{StaticResource ModernTextBoxStyle}" Width="180" HorizontalAlignment="Left"/>
+                </StackPanel>
+
+                <!-- Description -->
+                <StackPanel Grid.Column="1" Margin="0,0,16,0">
+                    <TextBlock Text="Description (optional)" Style="{StaticResource FieldLabelStyle}"/>
+                    <TextBox Text="{Binding ProfileDescription, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource ModernTextBoxStyle}" Width="180" HorizontalAlignment="Left"
+                             ToolTip="Short description stored in the profile JSON"/>
                 </StackPanel>
 
                 <!-- Repeat Mode -->
-                <StackPanel Grid.Column="1" Margin="0,0,16,0">
+                <StackPanel Grid.Column="2" Margin="0,0,16,0">
                     <TextBlock Text="Repeat Mode" Style="{StaticResource FieldLabelStyle}"/>
                     <ComboBox ItemsSource="{Binding RepeatModes}"
                               SelectedItem="{Binding RepeatMode}"
@@ -52,7 +61,7 @@
                 </StackPanel>
 
                 <!-- Repeat Count -->
-                <StackPanel Grid.Column="2" Margin="0,0,16,0">
+                <StackPanel Grid.Column="3" Margin="0,0,16,0">
                     <TextBlock Text="Repeat Count" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding RepeatCount, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBoxStyle}" Width="80"
@@ -60,7 +69,7 @@
                 </StackPanel>
 
                 <!-- Loop Delay -->
-                <StackPanel Grid.Column="3" Margin="0,0,16,0">
+                <StackPanel Grid.Column="4" Margin="0,0,16,0">
                     <TextBlock Text="Loop Delay (ms)" Style="{StaticResource FieldLabelStyle}"/>
                     <TextBox Text="{Binding LoopDelayMs, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBoxStyle}" Width="100"
@@ -68,7 +77,7 @@
                 </StackPanel>
 
                 <!-- Playback Controls -->
-                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Bottom">
                     <Button Content="Play" Style="{StaticResource SuccessButtonStyle}"
                             Command="{Binding PlayCommand}" MinWidth="80" Height="36" Margin="0,0,8,0"
                             ToolTip="Start macro playback"/>

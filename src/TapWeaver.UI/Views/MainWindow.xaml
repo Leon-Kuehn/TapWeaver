@@ -24,6 +24,13 @@
                     <TextBlock Text="TapWeaver" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     <TextBlock Text="  -  Macro Recorder and Auto Clicker" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
+                <!-- Always-on-top quick-toggle in title bar -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <CheckBox IsChecked="{Binding AlwaysOnTop}" Content="Always on top"
+                              VerticalAlignment="Center" FontSize="12"
+                              Foreground="{StaticResource TextSecondaryBrush}"
+                              ToolTip="Keep this window above all other windows"/>
+                </StackPanel>
             </Grid>
         </Border>
 
@@ -37,6 +44,9 @@
             </TabItem>
             <TabItem Header="Auto Clicker" Style="{StaticResource ModernTabItem}">
                 <views:AutoClickerView DataContext="{Binding AutoClicker}"/>
+            </TabItem>
+            <TabItem Header="Settings" Style="{StaticResource ModernTabItem}">
+                <views:SettingsView DataContext="{Binding Settings}"/>
             </TabItem>
         </TabControl>
     </Grid>

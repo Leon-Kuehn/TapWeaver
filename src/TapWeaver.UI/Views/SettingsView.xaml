@@ -1,0 +1,136 @@
+<UserControl x:Class="TapWeaver.UI.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20" MaxWidth="700" HorizontalAlignment="Left">
+
+            <!-- Header -->
+            <TextBlock Text="Settings" FontSize="22" FontWeight="Bold"
+                       Foreground="#212121" Margin="0,0,0,20"/>
+
+            <!-- ── General ─────────────────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="General" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+                    <CheckBox IsChecked="{Binding AlwaysOnTop}" FontSize="13"
+                              Content="Always on top — keep TapWeaver above all other windows"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Emergency Stop ──────────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Emergency Stop" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#757575" Margin="0,0,0,12">
+                        The fixed emergency-stop hotkey is always active while TapWeaver is running
+                        (even when minimised). It immediately stops all macro playback, the auto-clicker,
+                        and any ongoing recording, and releases all held keys and mouse buttons.
+                    </TextBlock>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Fixed shortcut:" FontSize="13"
+                                   VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <Border Grid.Column="1" Background="#FFF9C4" BorderBrush="#F9A825"
+                                BorderThickness="1" CornerRadius="4" Padding="10,6"
+                                HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding EmergencyStopHotkeyText}"
+                                       FontSize="13" FontWeight="Bold" Foreground="#E65100"/>
+                        </Border>
+                        <Button Grid.Column="2" Content="🛑 Emergency Stop Now"
+                                Style="{StaticResource DangerButtonStyle}"
+                                Command="{Binding EmergencyStopCommand}"
+                                Height="36" Margin="12,0,0,0"
+                                ToolTip="Manually trigger the emergency stop"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Global Hotkeys ──────────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Global Hotkeys" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#757575" Margin="0,0,0,16">
+                        Click a hotkey field and press a new key combination (at least one modifier key
+                        — Ctrl, Alt, or Shift — is required). The change takes effect immediately.
+                        Press Reset to restore the factory default.
+                    </TextBlock>
+
+                    <!-- Playback Toggle -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Toggle Macro Playback:"
+                                   FontSize="13" VerticalAlignment="Center"/>
+                        <TextBox  Grid.Column="1"
+                                  x:Name="PlaybackHotkeyBox"
+                                  Text="{Binding PlaybackHotkeyText, Mode=OneWay}"
+                                  IsReadOnly="True" Cursor="Hand"
+                                  Style="{StaticResource ModernTextBoxStyle}"
+                                  ToolTip="Click here, then press a key combination"
+                                  GotFocus="PlaybackHotkeyBox_GotFocus"
+                                  PreviewKeyDown="PlaybackHotkeyBox_PreviewKeyDown"/>
+                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                                 Style="{StaticResource SecondaryButtonStyle}" Height="32"
+                                 Command="{Binding ResetPlaybackHotkeyCommand}"/>
+                    </Grid>
+
+                    <!-- Recording Toggle -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Toggle Recording:"
+                                   FontSize="13" VerticalAlignment="Center"/>
+                        <TextBox  Grid.Column="1"
+                                  x:Name="RecordingHotkeyBox"
+                                  Text="{Binding RecordingHotkeyText, Mode=OneWay}"
+                                  IsReadOnly="True" Cursor="Hand"
+                                  Style="{StaticResource ModernTextBoxStyle}"
+                                  ToolTip="Click here, then press a key combination"
+                                  GotFocus="RecordingHotkeyBox_GotFocus"
+                                  PreviewKeyDown="RecordingHotkeyBox_PreviewKeyDown"/>
+                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                                 Style="{StaticResource SecondaryButtonStyle}" Height="32"
+                                 Command="{Binding ResetRecordingHotkeyCommand}"/>
+                    </Grid>
+
+                    <!-- Auto-Clicker Toggle -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Toggle Auto Clicker:"
+                                   FontSize="13" VerticalAlignment="Center"/>
+                        <TextBox  Grid.Column="1"
+                                  x:Name="AutoClickerHotkeyBox"
+                                  Text="{Binding AutoClickerHotkeyText, Mode=OneWay}"
+                                  IsReadOnly="True" Cursor="Hand"
+                                  Style="{StaticResource ModernTextBoxStyle}"
+                                  ToolTip="Click here, then press a key combination"
+                                  GotFocus="AutoClickerHotkeyBox_GotFocus"
+                                  PreviewKeyDown="AutoClickerHotkeyBox_PreviewKeyDown"/>
+                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                                 Style="{StaticResource SecondaryButtonStyle}" Height="32"
+                                 Command="{Binding ResetAutoClickerHotkeyCommand}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
