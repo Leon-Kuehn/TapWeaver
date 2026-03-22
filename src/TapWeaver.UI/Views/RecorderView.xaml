@@ -112,7 +112,7 @@
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
                     <TextBlock Text="Recorded Events" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding RecordedSteps.Count, StringFormat=' ({0} steps)'}"
-                               FontSize="13" Foreground="#757575" VerticalAlignment="Center"/>
+                               FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
                 <ListView Grid.Row="1" ItemsSource="{Binding RecordedSteps}"
                           BorderThickness="0" Background="Transparent"

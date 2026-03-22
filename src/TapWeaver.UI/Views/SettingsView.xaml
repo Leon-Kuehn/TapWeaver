@@ -53,11 +53,11 @@
 
                         <TextBlock Grid.Column="0" Text="Fixed shortcut:" FontSize="13"
                                    VerticalAlignment="Center" Margin="0,0,12,0"/>
-                        <Border Grid.Column="1" Background="#FFF9C4" BorderBrush="#F9A825"
+                        <Border Grid.Column="1" Background="#22FFB347" BorderBrush="{StaticResource WarningBrush}"
                                 BorderThickness="1" CornerRadius="4" Padding="10,6"
                                 HorizontalAlignment="Left">
                             <TextBlock Text="{Binding EmergencyStopHotkeyText}"
-                                       FontSize="13" FontWeight="Bold" Foreground="#E65100"/>
+                                       FontSize="13" FontWeight="Bold" Foreground="{StaticResource WarningBrush}"/>
                         </Border>
                         <Button Grid.Column="2"
                                 Style="{StaticResource DangerButtonStyle}"
