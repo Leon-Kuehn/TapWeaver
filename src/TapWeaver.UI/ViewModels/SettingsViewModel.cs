@@ -7,10 +7,12 @@ namespace TapWeaver.UI.ViewModels;
 public class SettingsViewModel : ViewModelBase
 {
     private readonly MainViewModel _main;
+    private readonly RecorderViewModel _recorder;
 
     public SettingsViewModel(MainViewModel main)
     {
         _main = main;
+        _recorder = _main.Recorder;
 
         // Propagate hotkey text changes when MainViewModel notifies them
         _main.PropertyChanged += (_, e) =>
@@ -29,6 +31,19 @@ public class SettingsViewModel : ViewModelBase
                     OnPropertyChanged(nameof(UseDarkMode)); break;
                 case nameof(MainViewModel.CompactMode):
                     OnPropertyChanged(nameof(CompactMode)); break;
+            }
+        };
+
+        _recorder.PropertyChanged += (_, e) =>
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(RecorderViewModel.RecordKeyboardEvents):
+                    OnPropertyChanged(nameof(RecordKeyboardEvents)); break;
+                case nameof(RecorderViewModel.RecordMouseClickEvents):
+                    OnPropertyChanged(nameof(RecordMouseClickEvents)); break;
+                case nameof(RecorderViewModel.RecordMouseMoveEvents):
+                    OnPropertyChanged(nameof(RecordMouseMoveEvents)); break;
             }
         };
 
@@ -56,6 +71,24 @@ public class SettingsViewModel : ViewModelBase
     {
         get => _main.CompactMode;
         set => _main.CompactMode = value;
+    }
+
+    public bool RecordKeyboardEvents
+    {
+        get => _recorder.RecordKeyboardEvents;
+        set => _recorder.RecordKeyboardEvents = value;
+    }
+
+    public bool RecordMouseClickEvents
+    {
+        get => _recorder.RecordMouseClickEvents;
+        set => _recorder.RecordMouseClickEvents = value;
+    }
+
+    public bool RecordMouseMoveEvents
+    {
+        get => _recorder.RecordMouseMoveEvents;
+        set => _recorder.RecordMouseMoveEvents = value;
     }
 
     // ── Hotkey display ────────────────────────────────────────────────────────

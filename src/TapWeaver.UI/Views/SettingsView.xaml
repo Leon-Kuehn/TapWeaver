@@ -12,7 +12,7 @@
             <!-- ── General ─────────────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="General" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                    <TextBlock Text="General" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,12" Foreground="{StaticResource TextPrimaryBrush}"/>
 
                     <CheckBox IsChecked="{Binding AlwaysOnTop}" FontSize="13"
                               Content="Always on top — keep TapWeaver above all other windows"
@@ -23,7 +23,7 @@
             <!-- ── Appearance ─────────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Appearance" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Appearance" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
                         Switch visual theme and layout density. Compact mode condenses the window for a tighter, TinyTask-like workspace.
                     </TextBlock>
@@ -34,10 +34,27 @@
                 </StackPanel>
             </Border>
 
+            <!-- ── Recorder Capture ───────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Recorder Capture" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
+                        Choose which events are captured while recording. Changes apply immediately.
+                    </TextBlock>
+
+                    <CheckBox IsChecked="{Binding RecordKeyboardEvents}" FontSize="13" Margin="0,0,0,8"
+                              Content="Capture keyboard events"/>
+                    <CheckBox IsChecked="{Binding RecordMouseClickEvents}" FontSize="13" Margin="0,0,0,8"
+                              Content="Capture mouse click events"/>
+                    <CheckBox IsChecked="{Binding RecordMouseMoveEvents}" FontSize="13"
+                              Content="Capture mouse movement events"/>
+                </StackPanel>
+            </Border>
+
             <!-- ── Emergency Stop ──────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Emergency Stop" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Emergency Stop" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
                         The fixed emergency-stop hotkey is always active while TapWeaver is running
                         (even when minimised). It immediately stops all macro playback, the auto-clicker,
@@ -51,7 +68,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="Fixed shortcut:" FontSize="13"
+                        <TextBlock Grid.Column="0" Text="Fixed shortcut:" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}"
                                    VerticalAlignment="Center" Margin="0,0,12,0"/>
                         <Border Grid.Column="1" Background="#22FFB347" BorderBrush="{StaticResource WarningBrush}"
                                 BorderThickness="1" CornerRadius="4" Padding="10,6"
@@ -76,7 +93,7 @@
             <!-- ── Global Hotkeys ──────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Global Hotkeys" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Global Hotkeys" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,16">
                         Click a hotkey field and press a new key combination (at least one modifier key
                         — Ctrl, Alt, or Shift — is required). The change takes effect immediately.
@@ -91,7 +108,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Sequencer Playback (Start/Stop):"
-                                   FontSize="13" VerticalAlignment="Center"/>
+                                   FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="PlaybackHotkeyBox"
                                   Text="{Binding PlaybackHotkeyText, Mode=OneWay}"
@@ -118,7 +135,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Toggle Recording:"
-                                   FontSize="13" VerticalAlignment="Center"/>
+                                   FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="RecordingHotkeyBox"
                                   Text="{Binding RecordingHotkeyText, Mode=OneWay}"
@@ -145,7 +162,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Toggle Auto Clicker:"
-                                   FontSize="13" VerticalAlignment="Center"/>
+                                   FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="AutoClickerHotkeyBox"
                                   Text="{Binding AutoClickerHotkeyText, Mode=OneWay}"

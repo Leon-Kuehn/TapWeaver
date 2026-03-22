@@ -167,28 +167,31 @@
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
                                   CanUserDeleteRows="False"
+                                  CanUserResizeColumns="True"
                                   HeadersVisibility="Column"
                                   BorderThickness="1"
                                   BorderBrush="{StaticResource CardBorderBrush}"
                                   RowHeaderWidth="0"
                                   FontSize="13"
+                                  MinColumnWidth="72"
                                   MinHeight="320"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                                   IsEnabled="{Binding IsEditable}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Type" Width="130">
+                                <DataGridTemplateColumn Header="Type" Width="1.4*" MinWidth="130">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox ItemsSource="{Binding DataContext.StepTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                       SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
+                                                      Foreground="{DynamicResource TextPrimaryBrush}"
                                                       BorderThickness="0"
                                                       Background="Transparent"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="Input" Width="170">
+                                <DataGridTemplateColumn Header="Input" Width="1.8*" MinWidth="150">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox ItemsSource="{Binding SelectableInputOptions}"
@@ -196,21 +199,23 @@
                                                       IsEditable="False"
                                                       IsTextSearchEnabled="True"
                                                       StaysOpenOnEdit="False"
+                                                      Foreground="{DynamicResource TextPrimaryBrush}"
                                                       BorderThickness="0"
                                                       Background="Transparent"
                                                       IsEnabled="{Binding HasSelectableInput}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Hold" Width="80" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Delay" Width="80" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="X" Width="62" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Y" Width="62" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Description" Width="*" IsReadOnly="True" Binding="{Binding Description}"/>
+                                <DataGridTextColumn Header="Hold" Width="0.8*" MinWidth="84" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Delay" Width="0.8*" MinWidth="84" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="X" Width="0.7*" MinWidth="72" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Y" Width="0.7*" MinWidth="72" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Description" Width="2.3*" MinWidth="220" IsReadOnly="True" Binding="{Binding Description}"/>
                             </DataGrid.Columns>
 
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
                                             <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>

@@ -62,7 +62,7 @@
         <!-- Settings Card -->
         <Border Grid.Row="2" Style="{StaticResource CardStyle}">
             <StackPanel>
-                <TextBlock Text="Configuration" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,16"/>
+                <TextBlock Text="Configuration" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,16" Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <WrapPanel>
 
@@ -98,9 +98,11 @@
                         <StackPanel Margin="0,0,0,8">
                             <RadioButton Content="Follow cursor (click where mouse is)"
                                          IsChecked="{Binding UseFixedPosition, Converter={StaticResource InverseBoolConverter}}"
+                                         Foreground="{StaticResource TextPrimaryBrush}"
                                          Margin="0,0,0,8"/>
                             <RadioButton Content="Fixed position"
                                          IsChecked="{Binding UseFixedPosition}"
+                                         Foreground="{StaticResource TextPrimaryBrush}"
                                          Margin="0,0,0,8"/>
                         </StackPanel>
 
