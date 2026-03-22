@@ -27,32 +27,24 @@ public partial class SettingsView : UserControl
     private void AutoClickerHotkeyBox_GotFocus(object sender, RoutedEventArgs e)
         => BeginCapture(AutoClickerHotkeyBox);
 
-    // ── PreviewKeyDown handlers — capture key combo ───────────────────────
-
-    private void PlaybackHotkeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (TryCaptureHotkey(e, out uint mods, out uint vk))
-            (DataContext as SettingsViewModel)?.SetPlaybackHotkey(mods, vk);
-    }
-
-    private void RecordingHotkeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (TryCaptureHotkey(e, out uint mods, out uint vk))
-            (DataContext as SettingsViewModel)?.SetRecordingHotkey(mods, vk);
-    }
-
-    private void AutoClickerHotkeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (TryCaptureHotkey(e, out uint mods, out uint vk))
-            (DataContext as SettingsViewModel)?.SetAutoClickerHotkey(mods, vk);
-    }
-
     // ── Helpers ───────────────────────────────────────────────────────────
 
     private void BeginCapture(TextBox box)
     {
         _capturingBox = box;
-        box.Text = "Press a key combination…";
+        (DataContext as SettingsViewModel)?.BeginHotkeyCapture();
+    }
+
+    private void EndCapture()
+    {
+        _capturingBox = null;
+        (DataContext as SettingsViewModel)?.EndHotkeyCapture();
+    }
+
+    private void HotkeyBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (ReferenceEquals(sender, _capturingBox))
+            EndCapture();
     }
 
     /// <summary>
@@ -88,5 +80,50 @@ public partial class SettingsView : UserControl
 
         vk = (uint)KeyInterop.VirtualKeyFromKey(key);
         return vk != 0;
+    }
+
+    private void PlaybackHotkeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            EndCapture();
+            return;
+        }
+
+        if (TryCaptureHotkey(e, out uint mods, out uint vk))
+        {
+            (DataContext as SettingsViewModel)?.SetPlaybackHotkey(mods, vk);
+            EndCapture();
+        }
+    }
+
+    private void RecordingHotkeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            EndCapture();
+            return;
+        }
+
+        if (TryCaptureHotkey(e, out uint mods, out uint vk))
+        {
+            (DataContext as SettingsViewModel)?.SetRecordingHotkey(mods, vk);
+            EndCapture();
+        }
+    }
+
+    private void AutoClickerHotkeyBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            EndCapture();
+            return;
+        }
+
+        if (TryCaptureHotkey(e, out uint mods, out uint vk))
+        {
+            (DataContext as SettingsViewModel)?.SetAutoClickerHotkey(mods, vk);
+            EndCapture();
+        }
     }
 }

@@ -116,6 +116,7 @@
                                   Style="{StaticResource ModernTextBoxStyle}"
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="PlaybackHotkeyBox_GotFocus"
+                                  LostKeyboardFocus="HotkeyBox_LostKeyboardFocus"
                                   PreviewKeyDown="PlaybackHotkeyBox_PreviewKeyDown"/>
                         <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
@@ -143,6 +144,7 @@
                                   Style="{StaticResource ModernTextBoxStyle}"
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="RecordingHotkeyBox_GotFocus"
+                                  LostKeyboardFocus="HotkeyBox_LostKeyboardFocus"
                                   PreviewKeyDown="RecordingHotkeyBox_PreviewKeyDown"/>
                         <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
@@ -170,6 +172,7 @@
                                   Style="{StaticResource ModernTextBoxStyle}"
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="AutoClickerHotkeyBox_GotFocus"
+                                  LostKeyboardFocus="HotkeyBox_LostKeyboardFocus"
                                   PreviewKeyDown="AutoClickerHotkeyBox_PreviewKeyDown"/>
                         <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"

@@ -31,6 +31,7 @@ public class MainViewModel : ViewModelBase, IDisposable
     private int _recordingHotkeyId   = -1;
     private int _autoClickerHotkeyId = -1;
     private int _emergencyStopHotkeyId = -1;
+    private bool _suspendHotkeyActions;
     private AppPage _selectedPage = AppPage.Sequencer;
 
     // ── Always-on-top ────────────────────────────────────────────────────────
@@ -174,6 +175,11 @@ public class MainViewModel : ViewModelBase, IDisposable
         _hotkeyService?.HandleHotkey(id);
     }
 
+    public void SetHotkeyCaptureActive(bool isActive)
+    {
+        _suspendHotkeyActions = isActive;
+    }
+
     /// <summary>
     /// Re-registers all hotkeys from current AppSettings.
     /// Called after the user changes a hotkey in the Settings tab.
@@ -223,7 +229,7 @@ public class MainViewModel : ViewModelBase, IDisposable
             _autoClickerHotkeyId = _hotkeyService.Register(
                 s.AutoClickerToggleHotkey.Modifiers | HotkeyConfig.MOD_NOREPEAT,
                 s.AutoClickerToggleHotkey.VirtualKey,
-                _autoClickerService.Toggle);
+                ToggleAutoClicker);
 
         UpdateRecorderHotkeysToIgnore();
     }
@@ -248,6 +254,9 @@ public class MainViewModel : ViewModelBase, IDisposable
 
     private void TogglePlayback()
     {
+        if (_suspendHotkeyActions)
+            return;
+
         if (_macroPlayer.IsPlaying)
             _macroPlayer.Stop();
         else
@@ -256,10 +265,21 @@ public class MainViewModel : ViewModelBase, IDisposable
 
     private void ToggleRecording()
     {
+        if (_suspendHotkeyActions)
+            return;
+
         if (_macroRecorder.IsRecording)
             Recorder.StopRecordingCommand.Execute(null);
         else
             Recorder.StartRecordingCommand.Execute(null);
+    }
+
+    private void ToggleAutoClicker()
+    {
+        if (_suspendHotkeyActions)
+            return;
+
+        _autoClickerService.Toggle();
     }
 
     /// <summary>

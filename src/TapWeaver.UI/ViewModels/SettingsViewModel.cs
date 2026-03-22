@@ -117,4 +117,10 @@ public class SettingsViewModel : ViewModelBase
 
     /// <summary>Manual emergency-stop button (same as the hotkey).</summary>
     public RelayCommand EmergencyStopCommand { get; }
+
+    public void BeginHotkeyCapture()
+        => _main.SetHotkeyCaptureActive(true);
+
+    public void EndHotkeyCapture()
+        => _main.SetHotkeyCaptureActive(false);
 }
