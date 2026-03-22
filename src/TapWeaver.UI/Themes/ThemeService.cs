@@ -42,12 +42,8 @@ public static class ThemeService
     private static void ApplyBrushColor(ResourceDictionary resources, string key, string hex)
     {
         var color = (Color)ColorConverter.ConvertFromString(hex);
-        if (resources[key] is SolidColorBrush brush)
-        {
-            brush.Color = color;
-            return;
-        }
-
+        // In release/published builds, XAML brushes can be frozen. Replacing the brush
+        // avoids "read-only Freezable" exceptions when switching theme at startup.
         resources[key] = new SolidColorBrush(color);
     }
 }
