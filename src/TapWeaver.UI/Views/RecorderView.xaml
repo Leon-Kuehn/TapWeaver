@@ -11,17 +11,17 @@
 
         <!-- Header -->
         <TextBlock Grid.Row="0" Text="Macro Recorder" FontSize="22" FontWeight="Bold"
-                   Foreground="#212121" Margin="0,0,0,16"/>
+                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
 
         <!-- Controls Card -->
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
             <StackPanel>
                 <TextBlock Text="Use the buttons below or configure a global hotkey to start/stop recording. Choose which event types should be captured and converted to the macro."
-                           TextWrapping="Wrap" Foreground="#757575" Margin="0,0,0,16" FontSize="13"/>
+                           TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,16" FontSize="13"/>
 
-                <Border Background="#F5F5F5" CornerRadius="6" Padding="12" Margin="0,0,0,16">
+                <Border Background="{StaticResource BackgroundBrush}" CornerRadius="6" Padding="12" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="Capture Options" FontSize="13" FontWeight="SemiBold" Foreground="#424242" Margin="0,0,0,8"/>
+                        <TextBlock Text="Capture Options" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
                         <WrapPanel>
                             <CheckBox Content="Keyboard" IsChecked="{Binding RecordKeyboardEvents}" Margin="0,0,16,8"
                                       IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBoolConverter}}"/>
@@ -31,7 +31,7 @@
                                       IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBoolConverter}}"/>
                         </WrapPanel>
                         <TextBlock Text="Tip: Mouse movement can generate many steps. Leave it off unless you need path-accurate cursor motion."
-                                   TextWrapping="Wrap" Foreground="#757575" FontSize="12"/>
+                                   TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
                     </StackPanel>
                 </Border>
 

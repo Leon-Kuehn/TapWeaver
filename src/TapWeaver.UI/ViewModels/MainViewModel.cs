@@ -2,6 +2,7 @@ using TapWeaver.Core.Input;
 using TapWeaver.Core.Models;
 using TapWeaver.Core.Services;
 using TapWeaver.Persistence;
+using TapWeaver.UI.Themes;
 
 namespace TapWeaver.UI.ViewModels;
 
@@ -37,6 +38,40 @@ public class MainViewModel : ViewModelBase, IDisposable
         }
     }
 
+    public bool UseDarkMode
+    {
+        get => _appSettings.UseDarkMode;
+        set
+        {
+            if (_appSettings.UseDarkMode == value) return;
+            _appSettings.UseDarkMode = value;
+            OnPropertyChanged();
+            ThemeService.ApplyTheme(value);
+            AppSettingsSerializer.Save(_appSettings);
+        }
+    }
+
+    public bool CompactMode
+    {
+        get => _appSettings.CompactMode;
+        set
+        {
+            if (_appSettings.CompactMode == value) return;
+            _appSettings.CompactMode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(RecorderTabHeader));
+            OnPropertyChanged(nameof(SequencerTabHeader));
+            OnPropertyChanged(nameof(AutoClickerTabHeader));
+            OnPropertyChanged(nameof(SettingsTabHeader));
+            AppSettingsSerializer.Save(_appSettings);
+        }
+    }
+
+    public string RecorderTabHeader => CompactMode ? "Rec" : "Recorder";
+    public string SequencerTabHeader => CompactMode ? "Seq" : "Sequencer";
+    public string AutoClickerTabHeader => CompactMode ? "Click" : "Auto Clicker";
+    public string SettingsTabHeader => "Settings";
+
     // ── Hotkey display strings ────────────────────────────────────────────────
 
     public string PlaybackHotkeyText
@@ -56,6 +91,7 @@ public class MainViewModel : ViewModelBase, IDisposable
     public MainViewModel()
     {
         _appSettings = AppSettingsSerializer.Load();
+        ThemeService.ApplyTheme(_appSettings.UseDarkMode);
 
         _macroRecorder      = new MacroRecorder();
         _macroPlayer        = new MacroPlayer();

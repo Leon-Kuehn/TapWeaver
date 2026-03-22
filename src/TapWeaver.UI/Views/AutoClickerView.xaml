@@ -11,7 +11,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Auto Clicker" FontSize="22" FontWeight="Bold"
-                   Foreground="#212121" Margin="0,0,0,16"/>
+                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
 
         <!-- Status Card -->
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
@@ -26,11 +26,11 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="OFF"/>
-                                <Setter Property="Foreground" Value="#757575"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsRunning}" Value="True">
                                         <Setter Property="Text" Value="ON"/>
-                                        <Setter Property="Foreground" Value="#4CAF50"/>
+                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

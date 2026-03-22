@@ -3,202 +3,196 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:models="clr-namespace:TapWeaver.Core.Models;assembly=TapWeaver.Core">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Header + File operations -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Sequence Editor" FontSize="22" FontWeight="Bold" Foreground="#212121"/>
-            <WrapPanel Grid.Column="1">
-                <Button Content="New" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding NewCommand}" Margin="0,0,8,0"/>
-                <Button Content="Open..." Style="{StaticResource SecondaryButtonStyle}" Command="{Binding OpenCommand}" Margin="0,0,8,0"/>
-                <Button Content="Save" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveCommand}" Margin="0,0,8,0"/>
-                <Button Content="Save As..." Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveAsCommand}"/>
-            </WrapPanel>
-        </Grid>
-
-        <!-- Settings Card -->
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
-            <WrapPanel>
-
-                <!-- Macro Name -->
-                <StackPanel Width="220" Margin="0,0,16,12">
-                    <TextBlock Text="Macro Name" Style="{StaticResource FieldLabelStyle}"/>
-                    <TextBox Text="{Binding MacroName, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBoxStyle}"
-                             IsEnabled="{Binding IsEditable}"/>
-                </StackPanel>
-
-                <!-- Description -->
-                <StackPanel Width="250" Margin="0,0,16,12">
-                    <TextBlock Text="Description (optional)" Style="{StaticResource FieldLabelStyle}"/>
-                    <TextBox Text="{Binding ProfileDescription, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBoxStyle}"
-                             ToolTip="Short description stored in the profile JSON"
-                             IsEnabled="{Binding IsEditable}"/>
-                </StackPanel>
-
-                <!-- Repeat Mode -->
-                <StackPanel Width="140" Margin="0,0,16,12">
-                    <TextBlock Text="Repeat Mode" Style="{StaticResource FieldLabelStyle}"/>
-                    <ComboBox ItemsSource="{Binding RepeatModes}"
-                              SelectedItem="{Binding RepeatMode}"
-                              Style="{StaticResource ModernComboBoxStyle}"
-                              IsEnabled="{Binding IsEditable}"/>
-                </StackPanel>
-
-                <!-- Repeat Count -->
-                <StackPanel Width="120" Margin="0,0,16,12">
-                    <TextBlock Text="Repeat Count" Style="{StaticResource FieldLabelStyle}"/>
-                    <TextBox Text="{Binding RepeatCount, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBoxStyle}"
-                             ToolTip="Number of times to repeat (for Count mode)"
-                             IsEnabled="{Binding IsEditable}"/>
-                </StackPanel>
-
-                <!-- Loop Delay -->
-                <StackPanel Width="130" Margin="0,0,16,12">
-                    <TextBlock Text="Loop Delay (ms)" Style="{StaticResource FieldLabelStyle}"/>
-                    <TextBox Text="{Binding LoopDelayMs, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBoxStyle}"
-                             ToolTip="Delay between loop iterations in milliseconds"
-                             IsEnabled="{Binding IsEditable}"/>
-                </StackPanel>
-
-                <!-- Timing mode -->
-                <StackPanel Width="200" Margin="0,0,16,12" VerticalAlignment="Bottom">
-                    <CheckBox Content="High Precision Timing"
-                              IsChecked="{Binding HighPrecisionTiming}"
-                              IsEnabled="{Binding IsEditable}"
-                              ToolTip="Uses tighter timing control to reduce long-run drift in repeated macros."/>
-                </StackPanel>
-
-                <!-- Hotkey info + Running indicator -->
-                <StackPanel Width="220" VerticalAlignment="Bottom" Margin="0,0,16,12">
-                    <TextBlock Style="{StaticResource FieldLabelStyle}" Text="Hotkey"/>
-                    <TextBlock FontSize="12" Foreground="#546E7A" VerticalAlignment="Center"
-                               Text="{Binding DataContext.PlaybackHotkeyText, RelativeSource={RelativeSource AncestorType=Window}}"
-                               ToolTip="Configurable global hotkey — change it in the Settings tab"/>
-                    <!-- Running indicator (only visible during playback) -->
-                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="#1565C0" Margin="0,4,0,0"
-                               Visibility="{Binding IsPlaying, Converter={StaticResource BoolToVisibilityConverter}}">
-                        ▶ Running…
-                    </TextBlock>
-                </StackPanel>
-
-                <!-- Playback Controls -->
-                <WrapPanel VerticalAlignment="Bottom" Margin="0,0,0,12">
-                    <Button Content="▶ Play" Style="{StaticResource SuccessButtonStyle}"
-                            Command="{Binding PlayCommand}" MinWidth="80" Height="36" Margin="0,0,8,0"
-                            ToolTip="Start macro playback"/>
-                    <Button Content="⏹ Stop" Style="{StaticResource DangerButtonStyle}"
-                            Command="{Binding StopCommand}" MinWidth="80" Height="36"
-                            ToolTip="Stop macro playback"/>
-                </WrapPanel>
-            </WrapPanel>
-        </Border>
-
-        <!-- Steps DataGrid -->
-        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Toolbar -->
-                <WrapPanel Grid.Row="0" Margin="0,0,0,12"
-                            IsEnabled="{Binding IsEditable}">
-                    <Button Content="+ Add Step" Style="{StaticResource PrimaryButtonStyle}"
-                            Command="{Binding AddStepCommand}" Height="32" Margin="0,0,8,0"/>
-                    <Button Content="Duplicate" Style="{StaticResource SecondaryButtonStyle}"
-                            Command="{Binding DuplicateStepCommand}" Height="32" Margin="0,0,8,0"/>
-                    <Button Content="Up" Style="{StaticResource SecondaryButtonStyle}"
-                            Command="{Binding MoveUpCommand}" Height="32" Margin="0,0,8,0"/>
-                    <Button Content="Down" Style="{StaticResource SecondaryButtonStyle}"
-                            Command="{Binding MoveDownCommand}" Height="32" Margin="0,0,8,0"/>
-                    <Button Content="Delete" Style="{StaticResource DangerButtonStyle}"
-                            Command="{Binding DeleteStepCommand}" Height="32"/>
-                </WrapPanel>
-
-                <!-- Steps List -->
-                <DataGrid Grid.Row="1" ItemsSource="{Binding Steps}"
-                          SelectedItem="{Binding SelectedStep}"
-                          AutoGenerateColumns="False" CanUserAddRows="False"
-                          CanUserDeleteRows="False" GridLinesVisibility="Horizontal"
-                          HeadersVisibility="Column" Background="Transparent"
-                          BorderThickness="1" BorderBrush="#E0E0E0"
-                          RowHeaderWidth="0" FontSize="13"
-                          MinHeight="260"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          IsEnabled="{Binding IsEditable}">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Type" Width="130">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox ItemsSource="{Binding DataContext.StepTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                              SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
-                                              BorderThickness="0" Background="Transparent"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Header="Key / Button" Width="180">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox ItemsSource="{Binding SelectableInputOptions}"
-                                              SelectedItem="{Binding KeyOrButton, UpdateSourceTrigger=PropertyChanged}"
-                                              IsEditable="False"
-                                              IsTextSearchEnabled="True"
-                                              StaysOpenOnEdit="False"
-                                              BorderThickness="0"
-                                              Background="Transparent"
-                                              IsEnabled="{Binding HasSelectableInput}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Hold (ms)" Width="100" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
-                        <DataGridTextColumn Header="Delay (ms)" Width="100" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
-                        <DataGridTextColumn Header="X" Width="70" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
-                        <DataGridTextColumn Header="Y" Width="70" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
-                        <DataGridTextColumn Header="Description" Width="*" IsReadOnly="True" Binding="{Binding Description}"/>
-                    </DataGrid.Columns>
-
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
-                                    <Setter Property="Background" Value="#E3F2FD"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                </DataGrid>
-            </Grid>
-        </Border>
-
-        <!-- Status Bar -->
-        <Border Grid.Row="3" Background="White" CornerRadius="4" Padding="12,8">
-            <Grid>
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,14">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Status}" Foreground="#757575" FontSize="12"/>
-                <TextBlock Grid.Column="1" Foreground="#757575" FontSize="12"
-                           Text="{Binding Steps.Count, StringFormat='{}{0} steps'}"/>
+                <StackPanel>
+                    <TextBlock Text="Sequencer" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock Text="Build, tune and run repeatable macro flows" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+                <WrapPanel Grid.Column="1" VerticalAlignment="Top">
+                    <Button Content="+ New" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding NewCommand}" Margin="0,0,8,0"/>
+                    <Button Content="Open" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding OpenCommand}" Margin="0,0,8,0"/>
+                    <Button Content="Save" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveCommand}" Margin="0,0,8,0"/>
+                    <Button Content="Save As" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveAsCommand}"/>
+                </WrapPanel>
             </Grid>
-        </Border>
-    </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="340"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Control Rail -->
+                <StackPanel Grid.Column="0">
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Profile" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Name" Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox Text="{Binding MacroName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" IsEnabled="{Binding IsEditable}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Description" Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox Text="{Binding ProfileDescription, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" IsEnabled="{Binding IsEditable}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Playback" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                    <TextBlock Text="Repeat mode" Style="{StaticResource FieldLabelStyle}"/>
+                                    <ComboBox ItemsSource="{Binding RepeatModes}" SelectedItem="{Binding RepeatMode}" Style="{StaticResource ModernComboBoxStyle}" IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="Count" Style="{StaticResource FieldLabelStyle}"/>
+                                    <TextBox Text="{Binding RepeatCount, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Loop delay (ms)" Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox Text="{Binding LoopDelayMs, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" IsEnabled="{Binding IsEditable}" Margin="0,0,0,10"/>
+
+                            <Expander Header="Advanced timing" IsExpanded="False">
+                                <StackPanel Margin="0,10,0,0">
+                                    <CheckBox Content="High precision timing" IsChecked="{Binding HighPrecisionTiming}" IsEnabled="{Binding IsEditable}" Margin="0,0,0,10"/>
+                                    <TextBlock Text="Start/stop hotkey" Style="{StaticResource FieldLabelStyle}"/>
+                                    <TextBlock Text="{Binding DataContext.PlaybackHotkeyText, RelativeSource={RelativeSource AncestorType=Window}}" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Run" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <WrapPanel>
+                                <Button Content="▶ Play" Style="{StaticResource SuccessButtonStyle}" Command="{Binding PlayCommand}" MinWidth="110" Height="38" Margin="0,0,8,0" ToolTip="Start macro playback"/>
+                                <Button Content="■ Stop" Style="{StaticResource DangerButtonStyle}" Command="{Binding StopCommand}" MinWidth="110" Height="38" ToolTip="Stop macro playback"/>
+                            </WrapPanel>
+                            <TextBlock Margin="0,10,0,0" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}">
+                                <Run Text="State: "/>
+                                <Run Text="{Binding Status}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Step Editor -->
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Steps" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Edit the action sequence on the right, row by row" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            </StackPanel>
+                            <WrapPanel Grid.Column="1" IsEnabled="{Binding IsEditable}">
+                                <Button Content="＋" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding AddStepCommand}" ToolTip="Add step"/>
+                                <Button Content="⎘" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding DuplicateStepCommand}" ToolTip="Duplicate step"/>
+                                <Button Content="↑" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding MoveUpCommand}" ToolTip="Move step up"/>
+                                <Button Content="↓" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding MoveDownCommand}" ToolTip="Move step down"/>
+                                <Button Content="✕" Width="34" Height="32" Style="{StaticResource DangerButtonStyle}" Command="{Binding DeleteStepCommand}" ToolTip="Delete step"/>
+                            </WrapPanel>
+                        </Grid>
+
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding Steps}"
+                                  SelectedItem="{Binding SelectedStep}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column"
+                                  Background="Transparent"
+                                  BorderThickness="1"
+                                  BorderBrush="{StaticResource CardBorderBrush}"
+                                  RowHeaderWidth="0"
+                                  FontSize="13"
+                                  MinHeight="320"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  IsEnabled="{Binding IsEditable}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Type" Width="130">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding DataContext.StepTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                      SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
+                                                      BorderThickness="0"
+                                                      Background="Transparent"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Input" Width="170">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding SelectableInputOptions}"
+                                                      SelectedItem="{Binding KeyOrButton, UpdateSourceTrigger=PropertyChanged}"
+                                                      IsEditable="False"
+                                                      IsTextSearchEnabled="True"
+                                                      StaysOpenOnEdit="False"
+                                                      BorderThickness="0"
+                                                      Background="Transparent"
+                                                      IsEnabled="{Binding HasSelectableInput}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Hold" Width="80" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Delay" Width="80" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="X" Width="62" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Y" Width="62" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Description" Width="*" IsReadOnly="True" Binding="{Binding Description}"/>
+                            </DataGrid.Columns>
+
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="2" Margin="0,12,0,0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Status}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                    <TextBlock Grid.Column="1" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Text="{Binding Steps.Count, StringFormat='{}{0} steps'}"/>
+                </Grid>
+            </Border>
+        </Grid>
     </ScrollViewer>
 </UserControl>

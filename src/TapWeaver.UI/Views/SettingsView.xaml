@@ -6,7 +6,7 @@
 
             <!-- Header -->
             <TextBlock Text="Settings" FontSize="22" FontWeight="Bold"
-                       Foreground="#212121" Margin="0,0,0,20"/>
+                       Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,20"/>
 
             <!-- ── General ─────────────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
@@ -19,11 +19,25 @@
                 </StackPanel>
             </Border>
 
+            <!-- ── Appearance ─────────────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Appearance" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
+                        Switch visual theme and layout density. Compact mode condenses the window for a tighter, TinyTask-like workspace.
+                    </TextBlock>
+                    <CheckBox IsChecked="{Binding UseDarkMode}" FontSize="13"
+                              Content="Enable dark mode" Margin="0,0,0,8"/>
+                    <CheckBox IsChecked="{Binding CompactMode}" FontSize="13"
+                              Content="Enable compact mode"/>
+                </StackPanel>
+            </Border>
+
             <!-- ── Emergency Stop ──────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
                     <TextBlock Text="Emergency Stop" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#757575" Margin="0,0,0,12">
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
                         The fixed emergency-stop hotkey is always active while TapWeaver is running
                         (even when minimised). It immediately stops all macro playback, the auto-clicker,
                         and any ongoing recording, and releases all held keys and mouse buttons.
@@ -57,7 +71,7 @@
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
                     <TextBlock Text="Global Hotkeys" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#757575" Margin="0,0,0,16">
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,16">
                         Click a hotkey field and press a new key combination (at least one modifier key
                         — Ctrl, Alt, or Shift — is required). The change takes effect immediately.
                         Press Reset to restore the factory default.

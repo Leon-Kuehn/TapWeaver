@@ -12,6 +12,8 @@ public class AppSettings
     };
 
     public bool AlwaysOnTop { get; set; } = false;
+    public bool UseDarkMode { get; set; } = false;
+    public bool CompactMode { get; set; } = false;
 
     /// <summary>Record keyboard key down/up events while recording.</summary>
     public bool RecordKeyboardEvents { get; set; } = true;

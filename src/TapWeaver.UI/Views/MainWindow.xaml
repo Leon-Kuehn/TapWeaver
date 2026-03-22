@@ -18,34 +18,44 @@
         </Grid.RowDefinitions>
 
         <!-- Title Bar Area -->
-        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1">
             <Grid Margin="20,12">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="TapWeaver" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                    <TextBlock Text="  -  Macro Recorder and Auto Clicker" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Text="TapWeaver" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Text="  Modern Macro Studio" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
                 <!-- Always-on-top quick-toggle in title bar -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <CheckBox IsChecked="{Binding AlwaysOnTop}" Content="Always on top"
                               VerticalAlignment="Center" FontSize="12"
                               Foreground="{StaticResource TextSecondaryBrush}"
-                              ToolTip="Keep this window above all other windows"/>
+                              ToolTip="Keep this window above all other windows"
+                              Margin="0,0,14,0"/>
+                    <CheckBox IsChecked="{Binding UseDarkMode}" Content="Dark mode"
+                              VerticalAlignment="Center" FontSize="12"
+                              Foreground="{StaticResource TextSecondaryBrush}"
+                              ToolTip="Switch between light and dark UI theme"
+                              Margin="0,0,14,0"/>
+                    <CheckBox IsChecked="{Binding CompactMode}" Content="Compact"
+                              VerticalAlignment="Center" FontSize="12"
+                              Foreground="{StaticResource TextSecondaryBrush}"
+                              ToolTip="Condense UI for a TinyTask-like small workspace"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- Tab Control -->
         <TabControl Grid.Row="1" Style="{StaticResource ModernTabControl}" Margin="8,6,8,8">
-            <TabItem Header="Recorder" Style="{StaticResource ModernTabItem}">
+            <TabItem Header="{Binding RecorderTabHeader}" Style="{StaticResource ModernTabItem}">
                 <views:RecorderView DataContext="{Binding Recorder}"/>
             </TabItem>
-            <TabItem Header="Sequencer" Style="{StaticResource ModernTabItem}">
+            <TabItem Header="{Binding SequencerTabHeader}" Style="{StaticResource ModernTabItem}">
                 <views:SequencerView DataContext="{Binding Sequencer}"/>
             </TabItem>
-            <TabItem Header="Auto Clicker" Style="{StaticResource ModernTabItem}">
+            <TabItem Header="{Binding AutoClickerTabHeader}" Style="{StaticResource ModernTabItem}">
                 <views:AutoClickerView DataContext="{Binding AutoClicker}"/>
             </TabItem>
-            <TabItem Header="Settings" Style="{StaticResource ModernTabItem}">
+            <TabItem Header="{Binding SettingsTabHeader}" Style="{StaticResource ModernTabItem}">
                 <views:SettingsView DataContext="{Binding Settings}"/>
             </TabItem>
         </TabControl>
