@@ -2,6 +2,46 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf">
+    <UserControl.Resources>
+        <Style x:Key="StepCellComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#223B82F6"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#1E3A8A"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="StepCellComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource ModernComboBoxStyle}">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource StepCellComboBoxItemStyle}"/>
+        </Style>
+
+        <Style x:Key="StepCellTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="StepCellEditingTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource ModernTextBoxStyle}">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        </Style>
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="20">
             <Grid.RowDefinitions>
@@ -192,9 +232,7 @@
                                         <DataTemplate>
                                             <ComboBox ItemsSource="{Binding DataContext.StepTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                       SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
-                                                      Foreground="{DynamicResource TextPrimaryBrush}"
-                                                      BorderThickness="0"
-                                                      Background="Transparent"/>
+                                                      Style="{StaticResource StepCellComboBoxStyle}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -207,18 +245,30 @@
                                                       IsEditable="False"
                                                       IsTextSearchEnabled="True"
                                                       StaysOpenOnEdit="False"
-                                                      Foreground="{DynamicResource TextPrimaryBrush}"
-                                                      BorderThickness="0"
-                                                      Background="Transparent"
+                                                      Style="{StaticResource StepCellComboBoxStyle}"
                                                       IsEnabled="{Binding HasSelectableInput}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Hold" Width="0.7*" MinWidth="72" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Delay" Width="0.7*" MinWidth="72" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="X" Width="0.6*" MinWidth="64" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Y" Width="0.6*" MinWidth="64" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Description" Width="2.1*" MinWidth="180" IsReadOnly="True" Binding="{Binding Description}"/>
+                                <DataGridTextColumn Header="Hold" Width="0.7*" MinWidth="72"
+                                                    Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"
+                                                    ElementStyle="{StaticResource StepCellTextStyle}"
+                                                    EditingElementStyle="{StaticResource StepCellEditingTextBoxStyle}"/>
+                                <DataGridTextColumn Header="Delay" Width="0.7*" MinWidth="72"
+                                                    Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"
+                                                    ElementStyle="{StaticResource StepCellTextStyle}"
+                                                    EditingElementStyle="{StaticResource StepCellEditingTextBoxStyle}"/>
+                                <DataGridTextColumn Header="X" Width="0.6*" MinWidth="64"
+                                                    Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"
+                                                    ElementStyle="{StaticResource StepCellTextStyle}"
+                                                    EditingElementStyle="{StaticResource StepCellEditingTextBoxStyle}"/>
+                                <DataGridTextColumn Header="Y" Width="0.6*" MinWidth="64"
+                                                    Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"
+                                                    ElementStyle="{StaticResource StepCellTextStyle}"
+                                                    EditingElementStyle="{StaticResource StepCellEditingTextBoxStyle}"/>
+                                <DataGridTextColumn Header="Description" Width="2.1*" MinWidth="180" IsReadOnly="True"
+                                                    Binding="{Binding Description}"
+                                                    ElementStyle="{StaticResource StepCellTextStyle}"/>
                             </DataGrid.Columns>
 
                             <DataGrid.RowStyle>
