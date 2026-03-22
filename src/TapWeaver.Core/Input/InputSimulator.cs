@@ -7,6 +7,11 @@ public static class InputSimulator
 {
     public static void SendKeyDown(ushort vkCode)
     {
+        var scanCode = (ushort)NativeMethods.MapVirtualKey(vkCode, 0);
+        var flags = scanCode == 0 ? 0u : NativeMethods.KEYEVENTF_SCANCODE;
+        if (IsExtendedKey(vkCode))
+            flags |= NativeMethods.KEYEVENTF_EXTENDEDKEY;
+
         var input = new NativeMethods.INPUT
         {
             type = NativeMethods.INPUT_KEYBOARD,
@@ -14,9 +19,9 @@ public static class InputSimulator
             {
                 ki = new NativeMethods.KEYBDINPUT
                 {
-                    wVk = vkCode,
-                    wScan = 0,
-                    dwFlags = 0,
+                    wVk = scanCode == 0 ? vkCode : (ushort)0,
+                    wScan = scanCode,
+                    dwFlags = flags,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -27,6 +32,11 @@ public static class InputSimulator
 
     public static void SendKeyUp(ushort vkCode)
     {
+        var scanCode = (ushort)NativeMethods.MapVirtualKey(vkCode, 0);
+        var flags = (scanCode == 0 ? 0u : NativeMethods.KEYEVENTF_SCANCODE) | NativeMethods.KEYEVENTF_KEYUP;
+        if (IsExtendedKey(vkCode))
+            flags |= NativeMethods.KEYEVENTF_EXTENDEDKEY;
+
         var input = new NativeMethods.INPUT
         {
             type = NativeMethods.INPUT_KEYBOARD,
@@ -34,9 +44,9 @@ public static class InputSimulator
             {
                 ki = new NativeMethods.KEYBDINPUT
                 {
-                    wVk = vkCode,
-                    wScan = 0,
-                    dwFlags = NativeMethods.KEYEVENTF_KEYUP,
+                    wVk = scanCode == 0 ? vkCode : (ushort)0,
+                    wScan = scanCode,
+                    dwFlags = flags,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -44,6 +54,28 @@ public static class InputSimulator
         };
         NativeMethods.SendInput(1, new[] { input }, Marshal.SizeOf<NativeMethods.INPUT>());
     }
+
+    private static bool IsExtendedKey(ushort vkCode) => vkCode switch
+    {
+        0x21 or // PageUp
+        0x22 or // PageDown
+        0x23 or // End
+        0x24 or // Home
+        0x25 or // Left
+        0x26 or // Up
+        0x27 or // Right
+        0x28 or // Down
+        0x2D or // Insert
+        0x2E or // Delete
+        0x5B or // Left Win
+        0x5C or // Right Win
+        0x5D or // Apps
+        0x6F or // Numpad /
+        0x90 or // NumLock
+        0xA3 or // Right Control
+        0xA5 => true, // Right Alt (AltGr)
+        _ => false
+    };
 
     public static void SendMouseClick(MouseButton button, int? x = null, int? y = null)
     {

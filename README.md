@@ -10,6 +10,7 @@ Think of it as a *TinyTask++*: ultra-simple to use, but with far more control.
 
 ### 🎙 Macro Recorder & Player
 - Records keyboard (key down / key up) and mouse click events with precise millisecond timing
+- Selective recording filters: choose keyboard events, mouse clicks, and optional mouse movement capture
 - Uses global low-level Windows hooks (`WH_KEYBOARD_LL`, `WH_MOUSE_LL`) — works even when the app is not focused
 - Configurable global hotkeys to start/stop recording and playback
 - Repeat modes: **Once**, **Count** (N times), or **Infinite** loop with optional loop delay

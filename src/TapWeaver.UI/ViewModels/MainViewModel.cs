@@ -61,7 +61,7 @@ public class MainViewModel : ViewModelBase, IDisposable
         _macroPlayer        = new MacroPlayer();
         _autoClickerService = new AutoClickerService();
 
-        Recorder    = new RecorderViewModel(_macroRecorder);
+        Recorder    = new RecorderViewModel(_macroRecorder, _appSettings);
         Sequencer   = new SequencerViewModel(_macroPlayer);
         AutoClicker = new AutoClickerViewModel(_autoClickerService);
         Settings    = new SettingsViewModel(this);
@@ -93,6 +93,7 @@ public class MainViewModel : ViewModelBase, IDisposable
     public void ReregisterHotkeys()
     {
         RegisterHotkeys();
+        UpdateRecorderHotkeysToIgnore();
         OnPropertyChanged(nameof(PlaybackHotkeyText));
         OnPropertyChanged(nameof(RecordingHotkeyText));
         OnPropertyChanged(nameof(AutoClickerHotkeyText));
@@ -135,6 +136,24 @@ public class MainViewModel : ViewModelBase, IDisposable
                 s.AutoClickerToggleHotkey.Modifiers | HotkeyConfig.MOD_NOREPEAT,
                 s.AutoClickerToggleHotkey.VirtualKey,
                 _autoClickerService.Toggle);
+
+        UpdateRecorderHotkeysToIgnore();
+    }
+
+    private void UpdateRecorderHotkeysToIgnore()
+    {
+        // Exclude recording hotkey from being recorded
+        var recordingHotkey = _appSettings.RecordingToggleHotkey;
+        if (recordingHotkey.IsSet)
+        {
+            _macroRecorder.IgnoreVirtualKey = recordingHotkey.VirtualKey;
+            _macroRecorder.IgnoreModifiers = recordingHotkey.Modifiers;
+        }
+        else
+        {
+            _macroRecorder.IgnoreVirtualKey = null;
+            _macroRecorder.IgnoreModifiers = null;
+        }
     }
 
     // ── Hotkey actions ────────────────────────────────────────────────────────

@@ -67,6 +67,14 @@
                                  ToolTip="Number of clicks per second"
                                  Margin="0,0,0,16"/>
 
+                        <TextBlock Text="{Binding HighCpsWarningText}"
+                                   Foreground="{StaticResource DangerBrush}"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="280"
+                                   Margin="0,0,0,16"
+                                   Visibility="{Binding ShowHighCpsWarning, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
                         <!-- Mouse Button -->
                         <TextBlock Text="Click Type" Style="{StaticResource FieldLabelStyle}"/>
                         <ComboBox ItemsSource="{Binding MouseButtons}"
@@ -97,11 +105,17 @@
                                          Style="{StaticResource ModernTextBoxStyle}" Width="80"
                                          ToolTip="X screen coordinate"/>
                             </StackPanel>
-                            <StackPanel>
+                            <StackPanel Margin="0,0,12,0">
                                 <TextBlock Text="Y" Style="{StaticResource FieldLabelStyle}"/>
                                 <TextBox Text="{Binding FixedY, UpdateSourceTrigger=PropertyChanged}"
                                          Style="{StaticResource ModernTextBoxStyle}" Width="80"
                                          ToolTip="Y screen coordinate"/>
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Bottom">
+                                <Button Content="🎯 Pick" Style="{StaticResource SecondaryButtonStyle}"
+                                        Command="{Binding PickLocationCommand}"
+                                        Height="32"
+                                        ToolTip="Click to select location with crosshair"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>

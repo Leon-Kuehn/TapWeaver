@@ -6,9 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ApplicationTitle>TapWeaver</ApplicationTitle>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TapWeaver.Core\TapWeaver.Core.csproj" />
     <ProjectReference Include="..\TapWeaver.Persistence\TapWeaver.Persistence.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\AppIcon.svg" />
+     <Resource Include="Assets\AppIcon.png" />
+    <None Include="Assets\AppIcon.ico" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,15 @@ public class AppSettings
 
     public bool AlwaysOnTop { get; set; } = false;
 
+    /// <summary>Record keyboard key down/up events while recording.</summary>
+    public bool RecordKeyboardEvents { get; set; } = true;
+
+    /// <summary>Record mouse button click events while recording.</summary>
+    public bool RecordMouseClickEvents { get; set; } = true;
+
+    /// <summary>Record mouse movement (MoveMouse steps) while recording.</summary>
+    public bool RecordMouseMoveEvents { get; set; } = false;
+
     /// <summary>Toggle macro playback on/off. Default: Ctrl+F8.</summary>
     public HotkeyConfig PlaybackToggleHotkey { get; set; } = new()
     {

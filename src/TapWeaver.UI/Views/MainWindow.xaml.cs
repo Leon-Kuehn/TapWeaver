@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using TapWeaver.UI.ViewModels;
 
 namespace TapWeaver.UI.Views;
@@ -9,8 +10,22 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+       LoadAppIcon();
     }
 
+    private void LoadAppIcon()
+    {
+        try
+        {
+            // Load the PNG icon from resources
+            var iconUri = new Uri("pack://application:,,,/Assets/AppIcon.png");
+            this.Icon = new BitmapImage(iconUri);
+        }
+        catch
+        {
+            // Gracefully fall back to default icon if loading fails
+        }
+    }
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);

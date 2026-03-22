@@ -15,8 +15,24 @@
         <!-- Controls Card -->
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
             <StackPanel>
-                <TextBlock Text="Use the buttons below or configure a global hotkey to start/stop recording. All keyboard and mouse events will be captured and converted to a macro."
+                <TextBlock Text="Use the buttons below or configure a global hotkey to start/stop recording. Choose which event types should be captured and converted to the macro."
                            TextWrapping="Wrap" Foreground="#757575" Margin="0,0,0,16" FontSize="13"/>
+
+                <Border Background="#F5F5F5" CornerRadius="6" Padding="12" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Capture Options" FontSize="13" FontWeight="SemiBold" Foreground="#424242" Margin="0,0,0,8"/>
+                        <WrapPanel>
+                            <CheckBox Content="Keyboard" IsChecked="{Binding RecordKeyboardEvents}" Margin="0,0,16,8"
+                                      IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBoolConverter}}"/>
+                            <CheckBox Content="Mouse Clicks" IsChecked="{Binding RecordMouseClickEvents}" Margin="0,0,16,8"
+                                      IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBoolConverter}}"/>
+                            <CheckBox Content="Mouse Movement" IsChecked="{Binding RecordMouseMoveEvents}" Margin="0,0,16,8"
+                                      IsEnabled="{Binding IsRecording, Converter={StaticResource InverseBoolConverter}}"/>
+                        </WrapPanel>
+                        <TextBlock Text="Tip: Mouse movement can generate many steps. Leave it off unless you need path-accurate cursor motion."
+                                   TextWrapping="Wrap" Foreground="#757575" FontSize="12"/>
+                    </StackPanel>
+                </Border>
 
                 <!-- Status Indicator -->
                 <Border CornerRadius="4" Padding="12,8" Margin="0,0,0,16" HorizontalAlignment="Left">

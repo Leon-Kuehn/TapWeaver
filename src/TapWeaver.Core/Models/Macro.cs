@@ -7,5 +7,6 @@ public class Macro
     public RepeatMode RepeatMode { get; set; } = RepeatMode.Once;
     public int RepeatCount { get; set; } = 1;
     public int LoopDelayMs { get; set; } = 0;
+    public bool HighPrecisionTiming { get; set; } = true;
     public List<MacroStep> Steps { get; set; } = new();
 }

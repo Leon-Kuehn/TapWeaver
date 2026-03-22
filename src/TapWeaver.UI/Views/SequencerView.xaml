@@ -34,6 +34,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -82,8 +83,16 @@
                              IsEnabled="{Binding IsEditable}"/>
                 </StackPanel>
 
+                <!-- Timing mode -->
+                <StackPanel Grid.Column="5" Margin="0,0,16,0" VerticalAlignment="Bottom">
+                    <CheckBox Content="High Precision Timing"
+                              IsChecked="{Binding HighPrecisionTiming}"
+                              IsEnabled="{Binding IsEditable}"
+                              ToolTip="Uses tighter timing control to reduce long-run drift in repeated macros."/>
+                </StackPanel>
+
                 <!-- Hotkey info + Running indicator -->
-                <StackPanel Grid.Column="5" VerticalAlignment="Bottom" Margin="0,0,16,0">
+                <StackPanel Grid.Column="6" VerticalAlignment="Bottom" Margin="0,0,16,0">
                     <TextBlock Style="{StaticResource FieldLabelStyle}" Text="Hotkey"/>
                     <TextBlock FontSize="12" Foreground="#546E7A" VerticalAlignment="Center"
                                Text="{Binding DataContext.PlaybackHotkeyText, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -96,7 +105,7 @@
                 </StackPanel>
 
                 <!-- Playback Controls -->
-                <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <StackPanel Grid.Column="7" Orientation="Horizontal" VerticalAlignment="Bottom">
                     <Button Content="▶ Play" Style="{StaticResource SuccessButtonStyle}"
                             Command="{Binding PlayCommand}" MinWidth="80" Height="36" Margin="0,0,8,0"
                             ToolTip="Start macro playback"/>
@@ -150,7 +159,20 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn Header="Key / Button" Width="120" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTemplateColumn Header="Key / Button" Width="180">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding SelectableInputOptions}"
+                                              SelectedItem="{Binding KeyOrButton, UpdateSourceTrigger=PropertyChanged}"
+                                              IsEditable="False"
+                                              IsTextSearchEnabled="True"
+                                              StaysOpenOnEdit="False"
+                                              BorderThickness="0"
+                                              Background="Transparent"
+                                              IsEnabled="{Binding HasSelectableInput}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Hold (ms)" Width="100" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
                         <DataGridTextColumn Header="Delay (ms)" Width="100" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
                         <DataGridTextColumn Header="X" Width="70" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>

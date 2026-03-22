@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
+using TapWeaver.Core.Input;
 using TapWeaver.Core.Models;
 using TapWeaver.Core.Services;
 using TapWeaver.Persistence;
@@ -15,6 +16,7 @@ public class SequencerViewModel : ViewModelBase
     private RepeatMode _repeatMode = RepeatMode.Once;
     private int _repeatCount = 1;
     private int _loopDelayMs = 0;
+    private bool _highPrecisionTiming = true;
     private string? _currentFilePath;
     private DateTime _profileCreated = DateTime.UtcNow;
     private int _currentStepIndex = -1;
@@ -33,6 +35,7 @@ public class SequencerViewModel : ViewModelBase
     public RepeatMode RepeatMode { get => _repeatMode; set => SetProperty(ref _repeatMode, value); }
     public int RepeatCount { get => _repeatCount; set => SetProperty(ref _repeatCount, value); }
     public int LoopDelayMs { get => _loopDelayMs; set => SetProperty(ref _loopDelayMs, value); }
+    public bool HighPrecisionTiming { get => _highPrecisionTiming; set => SetProperty(ref _highPrecisionTiming, value); }
     public string Status { get => _status; set => SetProperty(ref _status, value); }
     public bool IsPlaying => _player.IsPlaying;
 
@@ -67,7 +70,7 @@ public class SequencerViewModel : ViewModelBase
     public RelayCommand OpenCommand { get; }
     public RelayCommand NewCommand { get; }
 
-    private const string DefaultStepKey = "A";
+    private static readonly string DefaultStepKey = KeyboardKeyMap.AvailableKeyNames.FirstOrDefault() ?? "A";
     private const int DefaultStepHoldMs = 100;
 
     public SequencerViewModel(MacroPlayer player)
@@ -117,6 +120,7 @@ public class SequencerViewModel : ViewModelBase
         RepeatMode = macro.RepeatMode;
         RepeatCount = macro.RepeatCount;
         LoopDelayMs = macro.LoopDelayMs;
+        HighPrecisionTiming = macro.HighPrecisionTiming;
         Steps.Clear();
         foreach (var step in macro.Steps)
             Steps.Add(new MacroStepViewModel(step));
@@ -136,6 +140,7 @@ public class SequencerViewModel : ViewModelBase
         RepeatMode = RepeatMode,
         RepeatCount = RepeatCount,
         LoopDelayMs = LoopDelayMs,
+        HighPrecisionTiming = HighPrecisionTiming,
         Steps = Steps.Select(s => s.Step).ToList()
     };
 
@@ -248,6 +253,7 @@ public class SequencerViewModel : ViewModelBase
         RepeatMode = RepeatMode.Once;
         RepeatCount = 1;
         LoopDelayMs = 0;
+        HighPrecisionTiming = true;
         _profileCreated = DateTime.UtcNow;
         Steps.Clear();
         Status = "New macro – add steps and press Play";

@@ -21,6 +21,8 @@ internal static class NativeMethods
     public const uint INPUT_MOUSE = 0;
     public const uint INPUT_KEYBOARD = 1;
     public const uint KEYEVENTF_KEYUP = 0x0002;
+    public const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
+    public const uint KEYEVENTF_SCANCODE = 0x0008;
     public const uint KEYEVENTF_UNICODE = 0x0004;
     public const uint MOUSEEVENTF_MOVE = 0x0001;
     public const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
@@ -52,6 +54,9 @@ internal static class NativeMethods
 
     [DllImport("user32.dll")]
     public static extern int GetSystemMetrics(int nIndex);
+
+    [DllImport("user32.dll")]
+    public static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
     [DllImport("user32.dll")]
     public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
