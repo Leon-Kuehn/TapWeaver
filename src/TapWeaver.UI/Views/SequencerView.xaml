@@ -81,7 +81,7 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                                         <TextBlock Text="Repeat mode" Style="{StaticResource FieldLabelStyle}"/>
-                                        <ComboBox ItemsSource="{Binding RepeatModes}" SelectedItem="{Binding RepeatMode}" Style="{StaticResource ModernComboBoxStyle}" IsEnabled="{Binding IsEditable}"/>
+                                        <ComboBox ItemsSource="{Binding RepeatModes}" SelectedItem="{Binding RepeatMode}" Style="{StaticResource ModernComboBoxStyle}" Foreground="Black" IsEnabled="{Binding IsEditable}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Text="Count" Style="{StaticResource FieldLabelStyle}"/>
