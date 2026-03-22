@@ -1,6 +1,7 @@
 <UserControl x:Class="TapWeaver.UI.Views.AutoClickerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -36,14 +37,14 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <WrapPanel Grid.Column="1" VerticalAlignment="Center">
                     <Button Content="Start" Style="{StaticResource SuccessButtonStyle}"
                             Command="{Binding StartCommand}" MinWidth="100" Height="44"
                             Margin="0,0,12,0" FontSize="15"/>
                     <Button Content="Stop" Style="{StaticResource DangerButtonStyle}"
                             Command="{Binding StopCommand}" MinWidth="100" Height="44"
                             FontSize="15"/>
-                </StackPanel>
+                </WrapPanel>
             </Grid>
         </Border>
 
@@ -52,18 +53,14 @@
             <StackPanel>
                 <TextBlock Text="Configuration" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,16"/>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <WrapPanel>
 
                     <!-- Left Column -->
-                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                    <StackPanel Width="320" Margin="0,0,24,12">
                         <!-- CPS -->
                         <TextBlock Text="Clicks per Second (CPS)" Style="{StaticResource FieldLabelStyle}"/>
                         <TextBox Text="{Binding Cps, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBoxStyle}" Width="160" HorizontalAlignment="Left"
+                                 Style="{StaticResource ModernTextBoxStyle}" Width="180" HorizontalAlignment="Left"
                                  ToolTip="Number of clicks per second"
                                  Margin="0,0,0,16"/>
 
@@ -79,12 +76,12 @@
                         <TextBlock Text="Click Type" Style="{StaticResource FieldLabelStyle}"/>
                         <ComboBox ItemsSource="{Binding MouseButtons}"
                                   SelectedItem="{Binding Button}"
-                                  Style="{StaticResource ModernComboBoxStyle}" Width="160" HorizontalAlignment="Left"
+                                  Style="{StaticResource ModernComboBoxStyle}" Width="180" HorizontalAlignment="Left"
                                   Margin="0,0,0,16"/>
                     </StackPanel>
 
                     <!-- Right Column -->
-                    <StackPanel Grid.Column="1">
+                    <StackPanel Width="360" Margin="0,0,0,12">
                         <!-- Position Mode -->
                         <TextBlock Text="Click Position" Style="{StaticResource FieldLabelStyle}"/>
                         <StackPanel Margin="0,0,0,8">
@@ -97,7 +94,7 @@
                         </StackPanel>
 
                         <!-- Fixed Position Fields -->
-                        <StackPanel Orientation="Horizontal"
+                        <WrapPanel
                                     IsEnabled="{Binding UseFixedPosition}">
                             <StackPanel Margin="0,0,12,0">
                                 <TextBlock Text="X" Style="{StaticResource FieldLabelStyle}"/>
@@ -117,10 +114,11 @@
                                         Height="32"
                                         ToolTip="Click to select location with crosshair"/>
                             </StackPanel>
-                        </StackPanel>
+                        </WrapPanel>
                     </StackPanel>
-                </Grid>
+                </WrapPanel>
             </StackPanel>
         </Border>
     </Grid>
+    </ScrollViewer>
 </UserControl>
