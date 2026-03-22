@@ -86,7 +86,7 @@
                             ToolTip="Start capturing keyboard and mouse actions">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/record.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Start Recording"/>
+                            <TextBlock Text="Start Recording" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource SuccessButtonStyle}"
@@ -95,7 +95,7 @@
                             ToolTip="Stop recording and send result to Sequencer">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/stop.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Stop and Use"/>
+                            <TextBlock Text="Stop and Use" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                 </WrapPanel>

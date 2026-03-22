@@ -66,7 +66,7 @@
                                 ToolTip="Manually trigger the emergency stop">
                             <StackPanel Orientation="Horizontal">
                                 <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/alert.svg" Margin="0,0,6,0"/>
-                                <TextBlock Text="Emergency Stop"/>
+                                <TextBlock Text="Emergency Stop" Style="{StaticResource HideInCompactModeTextStyle}"/>
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -105,7 +105,7 @@
                                  Command="{Binding ResetPlaybackHotkeyCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
-                                <TextBlock Text="Reset"/>
+                                <TextBlock Text="Reset" Style="{StaticResource HideInCompactModeTextStyle}"/>
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -132,7 +132,7 @@
                                  Command="{Binding ResetRecordingHotkeyCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
-                                <TextBlock Text="Reset"/>
+                                <TextBlock Text="Reset" Style="{StaticResource HideInCompactModeTextStyle}"/>
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -159,7 +159,7 @@
                                  Command="{Binding ResetAutoClickerHotkeyCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
-                                <TextBlock Text="Reset"/>
+                                <TextBlock Text="Reset" Style="{StaticResource HideInCompactModeTextStyle}"/>
                             </StackPanel>
                         </Button>
                     </Grid>

@@ -19,31 +19,32 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel>
                     <TextBlock Text="Sequencer" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                    <TextBlock Text="Build, tune and run repeatable macro flows" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock Text="Build, tune and run repeatable macro flows" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
+                               Style="{StaticResource HideInCompactModeTextStyle}"/>
                 </StackPanel>
                 <WrapPanel Grid.Column="1" VerticalAlignment="Top">
                     <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding NewCommand}" Margin="0,0,8,0" ToolTip="Create new macro">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/file-plus.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="New"/>
+                            <TextBlock Text="New" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding OpenCommand}" Margin="0,0,8,0" ToolTip="Open existing macro">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/folder-open.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Open"/>
+                            <TextBlock Text="Open" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveCommand}" Margin="0,0,8,0" ToolTip="Save current macro">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/save.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Save"/>
+                            <TextBlock Text="Save" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveAsCommand}" ToolTip="Save macro as new file">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/save.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Save As"/>
+                            <TextBlock Text="Save As" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                 </WrapPanel>
@@ -106,13 +107,13 @@
                                 <Button Style="{StaticResource SuccessButtonStyle}" Command="{Binding PlayCommand}" MinWidth="110" Height="38" Margin="0,0,8,0" ToolTip="Start macro playback">
                                     <StackPanel Orientation="Horizontal">
                                         <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/play.svg" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Play"/>
+                                        <TextBlock Text="Play" Style="{StaticResource HideInCompactModeTextStyle}"/>
                                     </StackPanel>
                                 </Button>
                                 <Button Style="{StaticResource DangerButtonStyle}" Command="{Binding StopCommand}" MinWidth="110" Height="38" ToolTip="Stop macro playback">
                                     <StackPanel Orientation="Horizontal">
                                         <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/stop.svg" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Stop"/>
+                                        <TextBlock Text="Stop" Style="{StaticResource HideInCompactModeTextStyle}"/>
                                     </StackPanel>
                                 </Button>
                             </WrapPanel>

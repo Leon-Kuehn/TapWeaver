@@ -44,7 +44,7 @@
                             Margin="0,0,12,0" FontSize="15" ToolTip="Start auto clicker">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/play.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Start"/>
+                            <TextBlock Text="Start" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource DangerButtonStyle}"
@@ -52,7 +52,7 @@
                             FontSize="15" ToolTip="Stop auto clicker">
                         <StackPanel Orientation="Horizontal">
                             <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/stop.svg" Margin="0,0,6,0"/>
-                            <TextBlock Text="Stop"/>
+                            <TextBlock Text="Stop" Style="{StaticResource HideInCompactModeTextStyle}"/>
                         </StackPanel>
                     </Button>
                 </WrapPanel>
@@ -126,7 +126,7 @@
                                         ToolTip="Click to select location with crosshair">
                                     <StackPanel Orientation="Horizontal">
                                         <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/crosshair.svg" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Pick"/>
+                                        <TextBlock Text="Pick" Style="{StaticResource HideInCompactModeTextStyle}"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>

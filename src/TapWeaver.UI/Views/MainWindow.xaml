@@ -33,7 +33,8 @@
             <Grid Margin="20,12">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="TapWeaver" FontSize="20" FontWeight="Bold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
-                    <TextBlock Text="  Modern Macro Studio" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                    <TextBlock Text="  Modern Macro Studio" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"
+                               Style="{StaticResource HideInCompactModeTextStyle}"/>
                 </StackPanel>
                 <!-- Always-on-top quick-toggle in title bar -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
