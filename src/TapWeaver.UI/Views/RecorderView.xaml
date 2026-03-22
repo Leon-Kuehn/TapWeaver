@@ -1,6 +1,7 @@
 <UserControl x:Class="TapWeaver.UI.Views.RecorderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -79,12 +80,24 @@
 
                 <!-- Buttons -->
                 <WrapPanel>
-                    <Button Content="Start Recording" Style="{StaticResource DangerButtonStyle}"
+                    <Button Style="{StaticResource DangerButtonStyle}"
                             Command="{Binding StartRecordingCommand}"
-                            MinWidth="160" Height="44" Margin="0,0,12,0" FontSize="14"/>
-                    <Button Content="Stop and Use Macro" Style="{StaticResource SuccessButtonStyle}"
+                            MinWidth="178" Height="44" Margin="0,0,12,0" FontSize="14"
+                            ToolTip="Start capturing keyboard and mouse actions">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/record.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Start Recording"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource SuccessButtonStyle}"
                             Command="{Binding StopRecordingCommand}"
-                            MinWidth="160" Height="44" FontSize="14"/>
+                            MinWidth="178" Height="44" FontSize="14"
+                            ToolTip="Stop recording and send result to Sequencer">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/stop.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Stop and Use"/>
+                        </StackPanel>
+                    </Button>
                 </WrapPanel>
             </StackPanel>
         </Border>

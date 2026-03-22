@@ -1,6 +1,7 @@
 <UserControl x:Class="TapWeaver.UI.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="20" MaxWidth="700" HorizontalAlignment="Left">
 
@@ -58,11 +59,16 @@
                             <TextBlock Text="{Binding EmergencyStopHotkeyText}"
                                        FontSize="13" FontWeight="Bold" Foreground="#E65100"/>
                         </Border>
-                        <Button Grid.Column="2" Content="🛑 Emergency Stop Now"
+                        <Button Grid.Column="2"
                                 Style="{StaticResource DangerButtonStyle}"
                                 Command="{Binding EmergencyStopCommand}"
                                 Height="36" Margin="12,0,0,0"
-                                ToolTip="Manually trigger the emergency stop"/>
+                                ToolTip="Manually trigger the emergency stop">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/alert.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Emergency Stop"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
                 </StackPanel>
             </Border>
@@ -94,9 +100,14 @@
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="PlaybackHotkeyBox_GotFocus"
                                   PreviewKeyDown="PlaybackHotkeyBox_PreviewKeyDown"/>
-                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                        <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
-                                 Command="{Binding ResetPlaybackHotkeyCommand}"/>
+                                 Command="{Binding ResetPlaybackHotkeyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Reset"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <!-- Recording Toggle -->
@@ -116,9 +127,14 @@
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="RecordingHotkeyBox_GotFocus"
                                   PreviewKeyDown="RecordingHotkeyBox_PreviewKeyDown"/>
-                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                        <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
-                                 Command="{Binding ResetRecordingHotkeyCommand}"/>
+                                 Command="{Binding ResetRecordingHotkeyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Reset"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <!-- Auto-Clicker Toggle -->
@@ -138,9 +154,14 @@
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="AutoClickerHotkeyBox_GotFocus"
                                   PreviewKeyDown="AutoClickerHotkeyBox_PreviewKeyDown"/>
-                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                        <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
-                                 Command="{Binding ResetAutoClickerHotkeyCommand}"/>
+                                 Command="{Binding ResetAutoClickerHotkeyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Reset"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
                 </StackPanel>
             </Border>

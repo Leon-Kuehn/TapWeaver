@@ -1,7 +1,8 @@
 <UserControl x:Class="TapWeaver.UI.Views.SequencerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:models="clr-namespace:TapWeaver.Core.Models;assembly=TapWeaver.Core">
+             xmlns:models="clr-namespace:TapWeaver.Core.Models;assembly=TapWeaver.Core"
+             xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid Margin="20">
             <Grid.RowDefinitions>
@@ -21,10 +22,30 @@
                     <TextBlock Text="Build, tune and run repeatable macro flows" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                 </StackPanel>
                 <WrapPanel Grid.Column="1" VerticalAlignment="Top">
-                    <Button Content="+ New" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding NewCommand}" Margin="0,0,8,0"/>
-                    <Button Content="Open" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding OpenCommand}" Margin="0,0,8,0"/>
-                    <Button Content="Save" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveCommand}" Margin="0,0,8,0"/>
-                    <Button Content="Save As" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveAsCommand}"/>
+                    <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding NewCommand}" Margin="0,0,8,0" ToolTip="Create new macro">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/file-plus.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="New"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding OpenCommand}" Margin="0,0,8,0" ToolTip="Open existing macro">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/folder-open.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Open"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveCommand}" Margin="0,0,8,0" ToolTip="Save current macro">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/save.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Save"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveAsCommand}" ToolTip="Save macro as new file">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/save.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Save As"/>
+                        </StackPanel>
+                    </Button>
                 </WrapPanel>
             </Grid>
 
@@ -82,8 +103,18 @@
                         <StackPanel>
                             <TextBlock Text="Run" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10"/>
                             <WrapPanel>
-                                <Button Content="▶ Play" Style="{StaticResource SuccessButtonStyle}" Command="{Binding PlayCommand}" MinWidth="110" Height="38" Margin="0,0,8,0" ToolTip="Start macro playback"/>
-                                <Button Content="■ Stop" Style="{StaticResource DangerButtonStyle}" Command="{Binding StopCommand}" MinWidth="110" Height="38" ToolTip="Stop macro playback"/>
+                                <Button Style="{StaticResource SuccessButtonStyle}" Command="{Binding PlayCommand}" MinWidth="110" Height="38" Margin="0,0,8,0" ToolTip="Start macro playback">
+                                    <StackPanel Orientation="Horizontal">
+                                        <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/play.svg" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Play"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource DangerButtonStyle}" Command="{Binding StopCommand}" MinWidth="110" Height="38" ToolTip="Stop macro playback">
+                                    <StackPanel Orientation="Horizontal">
+                                        <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/stop.svg" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Stop"/>
+                                    </StackPanel>
+                                </Button>
                             </WrapPanel>
                             <TextBlock Margin="0,10,0,0" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}">
                                 <Run Text="State: "/>
@@ -111,11 +142,21 @@
                                 <TextBlock Text="Edit the action sequence on the right, row by row" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                             </StackPanel>
                             <WrapPanel Grid.Column="1" IsEnabled="{Binding IsEditable}">
-                                <Button Content="＋" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding AddStepCommand}" ToolTip="Add step"/>
-                                <Button Content="⎘" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding DuplicateStepCommand}" ToolTip="Duplicate step"/>
-                                <Button Content="↑" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding MoveUpCommand}" ToolTip="Move step up"/>
-                                <Button Content="↓" Width="34" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding MoveDownCommand}" ToolTip="Move step down"/>
-                                <Button Content="✕" Width="34" Height="32" Style="{StaticResource DangerButtonStyle}" Command="{Binding DeleteStepCommand}" ToolTip="Delete step"/>
+                                <Button Width="36" Height="32" Margin="0,0,6,0" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding AddStepCommand}" ToolTip="Add step">
+                                    <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/plus.svg"/>
+                                </Button>
+                                <Button Width="36" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding DuplicateStepCommand}" ToolTip="Duplicate step">
+                                    <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/copy.svg"/>
+                                </Button>
+                                <Button Width="36" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding MoveUpCommand}" ToolTip="Move step up">
+                                    <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/arrow-up.svg"/>
+                                </Button>
+                                <Button Width="36" Height="32" Margin="0,0,6,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding MoveDownCommand}" ToolTip="Move step down">
+                                    <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/arrow-down.svg"/>
+                                </Button>
+                                <Button Width="36" Height="32" Style="{StaticResource DangerButtonStyle}" Command="{Binding DeleteStepCommand}" ToolTip="Delete step">
+                                    <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/trash.svg"/>
+                                </Button>
                             </WrapPanel>
                         </Grid>
 
