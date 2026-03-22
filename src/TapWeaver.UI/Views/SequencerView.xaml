@@ -163,12 +163,11 @@
 
                         <DataGrid Grid.Row="1" ItemsSource="{Binding Steps}"
                                   SelectedItem="{Binding SelectedStep}"
+                                  Style="{StaticResource ModernDataGridStyle}"
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
                                   CanUserDeleteRows="False"
-                                  GridLinesVisibility="Horizontal"
                                   HeadersVisibility="Column"
-                                  Background="Transparent"
                                   BorderThickness="1"
                                   BorderBrush="{StaticResource CardBorderBrush}"
                                   RowHeaderWidth="0"

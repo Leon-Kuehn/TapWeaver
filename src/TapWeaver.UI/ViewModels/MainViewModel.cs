@@ -133,6 +133,11 @@ public class MainViewModel : ViewModelBase, IDisposable
     public MainViewModel()
     {
         _appSettings = AppSettingsSerializer.Load();
+        if (!_appSettings.UseDarkMode)
+        {
+            _appSettings.UseDarkMode = true;
+            AppSettingsSerializer.Save(_appSettings);
+        }
         ThemeService.ApplyTheme(_appSettings.UseDarkMode);
 
         _macroRecorder      = new MacroRecorder();
