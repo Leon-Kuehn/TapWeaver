@@ -8,6 +8,14 @@ namespace TapWeaver.UI.ViewModels;
 
 public class MainViewModel : ViewModelBase, IDisposable
 {
+    public enum AppPage
+    {
+        Recorder,
+        Sequencer,
+        AutoClicker,
+        Settings
+    }
+
     public RecorderViewModel  Recorder   { get; }
     public SequencerViewModel Sequencer  { get; }
     public AutoClickerViewModel AutoClicker { get; }
@@ -23,6 +31,7 @@ public class MainViewModel : ViewModelBase, IDisposable
     private int _recordingHotkeyId   = -1;
     private int _autoClickerHotkeyId = -1;
     private int _emergencyStopHotkeyId = -1;
+    private AppPage _selectedPage = AppPage.Sequencer;
 
     // ── Always-on-top ────────────────────────────────────────────────────────
 
@@ -72,6 +81,39 @@ public class MainViewModel : ViewModelBase, IDisposable
     public string AutoClickerTabHeader => CompactMode ? "Click" : "Auto Clicker";
     public string SettingsTabHeader => "Settings";
 
+    public AppPage SelectedPage
+    {
+        get => _selectedPage;
+        set
+        {
+            if (!SetProperty(ref _selectedPage, value)) return;
+            OnPropertyChanged(nameof(CurrentPageViewModel));
+            OnPropertyChanged(nameof(IsRecorderPageSelected));
+            OnPropertyChanged(nameof(IsSequencerPageSelected));
+            OnPropertyChanged(nameof(IsAutoClickerPageSelected));
+            OnPropertyChanged(nameof(IsSettingsPageSelected));
+        }
+    }
+
+    public object CurrentPageViewModel => SelectedPage switch
+    {
+        AppPage.Recorder => Recorder,
+        AppPage.Sequencer => Sequencer,
+        AppPage.AutoClicker => AutoClicker,
+        AppPage.Settings => Settings,
+        _ => Sequencer
+    };
+
+    public bool IsRecorderPageSelected => SelectedPage == AppPage.Recorder;
+    public bool IsSequencerPageSelected => SelectedPage == AppPage.Sequencer;
+    public bool IsAutoClickerPageSelected => SelectedPage == AppPage.AutoClicker;
+    public bool IsSettingsPageSelected => SelectedPage == AppPage.Settings;
+
+    public RelayCommand ShowRecorderCommand { get; }
+    public RelayCommand ShowSequencerCommand { get; }
+    public RelayCommand ShowAutoClickerCommand { get; }
+    public RelayCommand ShowSettingsCommand { get; }
+
     // ── Hotkey display strings ────────────────────────────────────────────────
 
     public string PlaybackHotkeyText
@@ -101,6 +143,11 @@ public class MainViewModel : ViewModelBase, IDisposable
         Sequencer   = new SequencerViewModel(_macroPlayer);
         AutoClicker = new AutoClickerViewModel(_autoClickerService);
         Settings    = new SettingsViewModel(this);
+
+        ShowRecorderCommand = new RelayCommand(() => SelectedPage = AppPage.Recorder);
+        ShowSequencerCommand = new RelayCommand(() => SelectedPage = AppPage.Sequencer);
+        ShowAutoClickerCommand = new RelayCommand(() => SelectedPage = AppPage.AutoClicker);
+        ShowSettingsCommand = new RelayCommand(() => SelectedPage = AppPage.Settings);
 
         Recorder.RecordingComplete += macro => Sequencer.LoadMacro(macro);
     }

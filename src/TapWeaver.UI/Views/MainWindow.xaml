@@ -3,13 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:TapWeaver.UI.Views"
         xmlns:vm="clr-namespace:TapWeaver.UI.ViewModels"
+        xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf"
         Title="TapWeaver" Height="760" Width="1180"
         MinHeight="620" MinWidth="920"
         Background="{StaticResource BackgroundBrush}"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:RecorderViewModel}">
+            <views:RecorderView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SequencerViewModel}">
+            <views:SequencerView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AutoClickerViewModel}">
+            <views:AutoClickerView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+            <views:SettingsView/>
+        </DataTemplate>
+    </Window.Resources>
 
     <Grid>
         <Grid.Background>
@@ -28,50 +46,106 @@
         <Ellipse Width="420" Height="420" Fill="#262196F3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-120,-120,0,0"/>
         <Ellipse Width="360" Height="360" Fill="#1A4CAF50" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-90,-90"/>
 
-        <!-- Title Bar Area -->
-        <Border Grid.Row="0" Background="#D91B2229" BorderBrush="#334155" BorderThickness="0,0,0,1">
-            <Grid Margin="20,12">
+        <!-- Custom Title Bar -->
+        <Border Grid.Row="0" Background="#D91B2229" BorderBrush="#334155" BorderThickness="0,0,0,1"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid Margin="14,10,10,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="TapWeaver" FontSize="20" FontWeight="Bold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
-                    <TextBlock Text="  Modern Macro Studio" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"
+                    <Border Width="26" Height="26" Background="#223B82F6" CornerRadius="8" Margin="0,0,10,0">
+                        <Viewbox Margin="5">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/play.svg"/>
+                        </Viewbox>
+                    </Border>
+                    <TextBlock Text="TapWeaver" FontSize="17" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
+                    <TextBlock Text="  studio" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"
                                Style="{StaticResource HideInCompactModeTextStyle}"/>
                 </StackPanel>
-                <!-- Always-on-top quick-toggle in title bar -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <CheckBox IsChecked="{Binding AlwaysOnTop}" Content="Always on top"
-                              VerticalAlignment="Center" FontSize="12"
-                              Foreground="#CBD5E1"
-                              ToolTip="Keep this window above all other windows"
-                              Margin="0,0,14,0"/>
-                    <CheckBox IsChecked="{Binding UseDarkMode}" Content="Dark mode"
-                              VerticalAlignment="Center" FontSize="12"
-                              Foreground="#CBD5E1"
-                              ToolTip="Switch between light and dark UI theme"
-                              Margin="0,0,14,0"/>
-                    <CheckBox IsChecked="{Binding CompactMode}" Content="Compact"
-                              VerticalAlignment="Center" FontSize="12"
-                              Foreground="#CBD5E1"
-                              ToolTip="Condense UI for a TinyTask-like small workspace"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource TitleBarActionButtonStyle}" Click="MinimizeButton_Click" ToolTip="Minimize" Margin="0,0,6,0">
+                        <svg:SvgViewbox Width="12" Height="12" Source="/Assets/Icons/minimize.svg"/>
+                    </Button>
+                    <Button Style="{StaticResource TitleBarActionButtonStyle}" Click="MaximizeRestoreButton_Click" ToolTip="Maximize/Restore" Margin="0,0,6,0">
+                        <svg:SvgViewbox Width="12" Height="12" Source="/Assets/Icons/maximize.svg"/>
+                    </Button>
+                    <Button Style="{StaticResource TitleBarActionButtonStyle}" Click="CloseButton_Click" ToolTip="Close">
+                        <svg:SvgViewbox Width="12" Height="12" Source="/Assets/Icons/close.svg"/>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Tab Control -->
-        <Border Grid.Row="1" Margin="10,8,10,10" CornerRadius="16" Background="#D91B2229" BorderBrush="#334155" BorderThickness="1" Padding="6">
-        <TabControl Style="{StaticResource ModernTabControl}" Margin="2">
-            <TabItem Header="{Binding RecorderTabHeader}" Style="{StaticResource ModernTabItem}">
-                <views:RecorderView DataContext="{Binding Recorder}"/>
-            </TabItem>
-            <TabItem Header="{Binding SequencerTabHeader}" Style="{StaticResource ModernTabItem}">
-                <views:SequencerView DataContext="{Binding Sequencer}"/>
-            </TabItem>
-            <TabItem Header="{Binding AutoClickerTabHeader}" Style="{StaticResource ModernTabItem}">
-                <views:AutoClickerView DataContext="{Binding AutoClicker}"/>
-            </TabItem>
-            <TabItem Header="{Binding SettingsTabHeader}" Style="{StaticResource ModernTabItem}">
-                <views:SettingsView DataContext="{Binding Settings}"/>
-            </TabItem>
-        </TabControl>
-        </Border>
+        <Grid Grid.Row="1" Margin="10,8,10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Width="220" CornerRadius="16" Background="#D91B2229" BorderBrush="#334155" BorderThickness="1" Padding="10">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Width" Value="220"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CompactMode}" Value="True">
+                                <Setter Property="Width" Value="78"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Navigation" Foreground="#94A3B8" FontSize="11" Margin="6,2,6,10"
+                               Style="{StaticResource HideInCompactModeTextStyle}"/>
+
+                    <StackPanel Grid.Row="1">
+                        <Button Style="{StaticResource SidebarNavButtonStyle}" Command="{Binding ShowRecorderCommand}" Tag="{Binding IsRecorderPageSelected}" Margin="0,0,0,8" ToolTip="Recorder">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/record.svg" Margin="0,0,8,0"/>
+                                <TextBlock Text="Recorder" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource SidebarNavButtonStyle}" Command="{Binding ShowSequencerCommand}" Tag="{Binding IsSequencerPageSelected}" Margin="0,0,0,8" ToolTip="Sequencer">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/play.svg" Margin="0,0,8,0"/>
+                                <TextBlock Text="Sequencer" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource SidebarNavButtonStyle}" Command="{Binding ShowAutoClickerCommand}" Tag="{Binding IsAutoClickerPageSelected}" Margin="0,0,0,8" ToolTip="Auto Clicker">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/crosshair.svg" Margin="0,0,8,0"/>
+                                <TextBlock Text="Auto Clicker" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource SidebarNavButtonStyle}" Command="{Binding ShowSettingsCommand}" Tag="{Binding IsSettingsPageSelected}" ToolTip="Settings">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/settings.svg" Margin="0,0,8,0"/>
+                                <TextBlock Text="Settings" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="0,12,0,0">
+                        <CheckBox IsChecked="{Binding AlwaysOnTop}" Content="Always on top" Foreground="#CBD5E1" FontSize="11" Margin="2,0,0,6"/>
+                        <CheckBox IsChecked="{Binding UseDarkMode}" Content="Dark mode" Foreground="#CBD5E1" FontSize="11" Margin="2,0,0,6"/>
+                        <CheckBox IsChecked="{Binding CompactMode}" Content="Compact" Foreground="#CBD5E1" FontSize="11" Margin="2,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" CornerRadius="16" Background="#D91B2229" BorderBrush="#334155" BorderThickness="1" Padding="6">
+                <ContentControl Content="{Binding CurrentPageViewModel}"/>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
