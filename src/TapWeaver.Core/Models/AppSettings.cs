@@ -12,6 +12,17 @@ public class AppSettings
     };
 
     public bool AlwaysOnTop { get; set; } = false;
+    public bool UseDarkMode { get; set; } = true;
+    public bool CompactMode { get; set; } = false;
+
+    /// <summary>Record keyboard key down/up events while recording.</summary>
+    public bool RecordKeyboardEvents { get; set; } = true;
+
+    /// <summary>Record mouse button click events while recording.</summary>
+    public bool RecordMouseClickEvents { get; set; } = true;
+
+    /// <summary>Record mouse movement (MoveMouse steps) while recording.</summary>
+    public bool RecordMouseMoveEvents { get; set; } = false;
 
     /// <summary>Toggle macro playback on/off. Default: Ctrl+F8.</summary>
     public HotkeyConfig PlaybackToggleHotkey { get; set; } = new()
@@ -33,4 +44,14 @@ public class AppSettings
         Modifiers  = HotkeyConfig.MOD_CONTROL,
         VirtualKey = HotkeyConfig.VK_F9
     };
+
+    /// <summary>
+    /// Enables keyboard message routing to a selected target window handle.
+    /// </summary>
+    public bool RouteInputToSelectedWindow { get; set; } = false;
+
+    /// <summary>
+    /// Last selected target window handle. Stored as Int64 for JSON portability.
+    /// </summary>
+    public long TargetWindowHandle { get; set; } = 0;
 }

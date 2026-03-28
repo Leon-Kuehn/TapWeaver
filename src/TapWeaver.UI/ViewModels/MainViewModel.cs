@@ -2,11 +2,23 @@ using TapWeaver.Core.Input;
 using TapWeaver.Core.Models;
 using TapWeaver.Core.Services;
 using TapWeaver.Persistence;
+using TapWeaver.UI.Themes;
 
 namespace TapWeaver.UI.ViewModels;
 
+/// <summary>
+/// Main shell view model that coordinates page navigation, global hotkeys and shared app state.
+/// </summary>
 public class MainViewModel : ViewModelBase, IDisposable
 {
+    public enum AppPage
+    {
+        Recorder,
+        Sequencer,
+        AutoClicker,
+        Settings
+    }
+
     public RecorderViewModel  Recorder   { get; }
     public SequencerViewModel Sequencer  { get; }
     public AutoClickerViewModel AutoClicker { get; }
@@ -22,6 +34,8 @@ public class MainViewModel : ViewModelBase, IDisposable
     private int _recordingHotkeyId   = -1;
     private int _autoClickerHotkeyId = -1;
     private int _emergencyStopHotkeyId = -1;
+    private bool _suspendHotkeyActions;
+    private AppPage _selectedPage = AppPage.Sequencer;
 
     // ── Always-on-top ────────────────────────────────────────────────────────
 
@@ -36,6 +50,73 @@ public class MainViewModel : ViewModelBase, IDisposable
             AppSettingsSerializer.Save(_appSettings);
         }
     }
+
+    public bool UseDarkMode
+    {
+        get => _appSettings.UseDarkMode;
+        set
+        {
+            if (_appSettings.UseDarkMode == value) return;
+            _appSettings.UseDarkMode = value;
+            OnPropertyChanged();
+            ThemeService.ApplyTheme(value);
+            AppSettingsSerializer.Save(_appSettings);
+        }
+    }
+
+    public bool CompactMode
+    {
+        get => _appSettings.CompactMode;
+        set
+        {
+            if (_appSettings.CompactMode == value) return;
+            _appSettings.CompactMode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(RecorderTabHeader));
+            OnPropertyChanged(nameof(SequencerTabHeader));
+            OnPropertyChanged(nameof(AutoClickerTabHeader));
+            OnPropertyChanged(nameof(SettingsTabHeader));
+            AppSettingsSerializer.Save(_appSettings);
+        }
+    }
+
+    public string RecorderTabHeader => CompactMode ? "Rec" : "Recorder";
+    public string SequencerTabHeader => CompactMode ? "Seq" : "Sequencer";
+    public string AutoClickerTabHeader => CompactMode ? "Click" : "Auto Clicker";
+    public string SettingsTabHeader => "Settings";
+
+    public AppPage SelectedPage
+    {
+        get => _selectedPage;
+        set
+        {
+            if (!SetProperty(ref _selectedPage, value)) return;
+            OnPropertyChanged(nameof(CurrentPageViewModel));
+            OnPropertyChanged(nameof(IsRecorderPageSelected));
+            OnPropertyChanged(nameof(IsSequencerPageSelected));
+            OnPropertyChanged(nameof(IsAutoClickerPageSelected));
+            OnPropertyChanged(nameof(IsSettingsPageSelected));
+        }
+    }
+
+    public object CurrentPageViewModel => SelectedPage switch
+    {
+        AppPage.Recorder => Recorder,
+        AppPage.Sequencer => Sequencer,
+        AppPage.AutoClicker => AutoClicker,
+        AppPage.Settings => Settings,
+        _ => Sequencer
+    };
+
+    public bool IsRecorderPageSelected => SelectedPage == AppPage.Recorder;
+    public bool IsSequencerPageSelected => SelectedPage == AppPage.Sequencer;
+    public bool IsAutoClickerPageSelected => SelectedPage == AppPage.AutoClicker;
+    public bool IsSettingsPageSelected => SelectedPage == AppPage.Settings;
+
+    public RelayCommand ShowRecorderCommand { get; }
+    public RelayCommand ShowSequencerCommand { get; }
+    public RelayCommand ShowAutoClickerCommand { get; }
+    public RelayCommand ShowSettingsCommand { get; }
 
     // ── Hotkey display strings ────────────────────────────────────────────────
 
@@ -56,17 +137,29 @@ public class MainViewModel : ViewModelBase, IDisposable
     public MainViewModel()
     {
         _appSettings = AppSettingsSerializer.Load();
+        if (!_appSettings.UseDarkMode)
+        {
+            _appSettings.UseDarkMode = true;
+            AppSettingsSerializer.Save(_appSettings);
+        }
+        ThemeService.ApplyTheme(_appSettings.UseDarkMode);
 
         _macroRecorder      = new MacroRecorder();
         _macroPlayer        = new MacroPlayer();
         _autoClickerService = new AutoClickerService();
 
-        Recorder    = new RecorderViewModel(_macroRecorder);
-        Sequencer   = new SequencerViewModel(_macroPlayer);
+        Recorder    = new RecorderViewModel(_macroRecorder, _appSettings);
+        Sequencer   = new SequencerViewModel(_macroPlayer, _appSettings);
         AutoClicker = new AutoClickerViewModel(_autoClickerService);
         Settings    = new SettingsViewModel(this);
 
+        ShowRecorderCommand = new RelayCommand(() => SelectedPage = AppPage.Recorder);
+        ShowSequencerCommand = new RelayCommand(() => SelectedPage = AppPage.Sequencer);
+        ShowAutoClickerCommand = new RelayCommand(() => SelectedPage = AppPage.AutoClicker);
+        ShowSettingsCommand = new RelayCommand(() => SelectedPage = AppPage.Settings);
+
         Recorder.RecordingComplete += macro => Sequencer.LoadMacro(macro);
+        Sequencer.PropertyChanged += HandleSequencerPropertyChanged;
     }
 
     // ── Hotkey infrastructure ─────────────────────────────────────────────────
@@ -86,6 +179,11 @@ public class MainViewModel : ViewModelBase, IDisposable
         _hotkeyService?.HandleHotkey(id);
     }
 
+    public void SetHotkeyCaptureActive(bool isActive)
+    {
+        _suspendHotkeyActions = isActive;
+    }
+
     /// <summary>
     /// Re-registers all hotkeys from current AppSettings.
     /// Called after the user changes a hotkey in the Settings tab.
@@ -93,6 +191,7 @@ public class MainViewModel : ViewModelBase, IDisposable
     public void ReregisterHotkeys()
     {
         RegisterHotkeys();
+        UpdateRecorderHotkeysToIgnore();
         OnPropertyChanged(nameof(PlaybackHotkeyText));
         OnPropertyChanged(nameof(RecordingHotkeyText));
         OnPropertyChanged(nameof(AutoClickerHotkeyText));
@@ -134,13 +233,34 @@ public class MainViewModel : ViewModelBase, IDisposable
             _autoClickerHotkeyId = _hotkeyService.Register(
                 s.AutoClickerToggleHotkey.Modifiers | HotkeyConfig.MOD_NOREPEAT,
                 s.AutoClickerToggleHotkey.VirtualKey,
-                _autoClickerService.Toggle);
+                ToggleAutoClicker);
+
+        UpdateRecorderHotkeysToIgnore();
+    }
+
+    private void UpdateRecorderHotkeysToIgnore()
+    {
+        // Exclude recording hotkey from being recorded
+        var recordingHotkey = _appSettings.RecordingToggleHotkey;
+        if (recordingHotkey.IsSet)
+        {
+            _macroRecorder.IgnoreVirtualKey = recordingHotkey.VirtualKey;
+            _macroRecorder.IgnoreModifiers = recordingHotkey.Modifiers;
+        }
+        else
+        {
+            _macroRecorder.IgnoreVirtualKey = null;
+            _macroRecorder.IgnoreModifiers = null;
+        }
     }
 
     // ── Hotkey actions ────────────────────────────────────────────────────────
 
     private void TogglePlayback()
     {
+        if (_suspendHotkeyActions)
+            return;
+
         if (_macroPlayer.IsPlaying)
             _macroPlayer.Stop();
         else
@@ -149,10 +269,21 @@ public class MainViewModel : ViewModelBase, IDisposable
 
     private void ToggleRecording()
     {
+        if (_suspendHotkeyActions)
+            return;
+
         if (_macroRecorder.IsRecording)
             Recorder.StopRecordingCommand.Execute(null);
         else
             Recorder.StartRecordingCommand.Execute(null);
+    }
+
+    private void ToggleAutoClicker()
+    {
+        if (_suspendHotkeyActions)
+            return;
+
+        _autoClickerService.Toggle();
     }
 
     /// <summary>
@@ -246,8 +377,24 @@ public class MainViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
+        Sequencer.PropertyChanged -= HandleSequencerPropertyChanged;
         _hotkeyService?.Dispose();
         _macroRecorder.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    private void HandleSequencerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SequencerViewModel.RouteInputToSelectedWindow))
+        {
+            _appSettings.RouteInputToSelectedWindow = Sequencer.RouteInputToSelectedWindow;
+            AppSettingsSerializer.Save(_appSettings);
+        }
+
+        if (e.PropertyName == nameof(SequencerViewModel.TargetWindowHandle))
+        {
+            _appSettings.TargetWindowHandle = Sequencer.TargetWindowHandle.ToInt64();
+            AppSettingsSerializer.Save(_appSettings);
+        }
     }
 }

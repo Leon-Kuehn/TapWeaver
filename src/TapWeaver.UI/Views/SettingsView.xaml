@@ -1,17 +1,18 @@
 <UserControl x:Class="TapWeaver.UI.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="20" MaxWidth="700" HorizontalAlignment="Left">
 
             <!-- Header -->
             <TextBlock Text="Settings" FontSize="22" FontWeight="Bold"
-                       Foreground="#212121" Margin="0,0,0,20"/>
+                       Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,20"/>
 
             <!-- ── General ─────────────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="General" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                    <TextBlock Text="General" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,12" Foreground="{StaticResource TextPrimaryBrush}"/>
 
                     <CheckBox IsChecked="{Binding AlwaysOnTop}" FontSize="13"
                               Content="Always on top — keep TapWeaver above all other windows"
@@ -19,11 +20,42 @@
                 </StackPanel>
             </Border>
 
+            <!-- ── Appearance ─────────────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Appearance" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
+                        Switch visual theme and layout density. Compact mode condenses the window for a tighter, TinyTask-like workspace.
+                    </TextBlock>
+                    <CheckBox IsChecked="{Binding UseDarkMode}" FontSize="13"
+                              Content="Enable dark mode" Margin="0,0,0,8"/>
+                    <CheckBox IsChecked="{Binding CompactMode}" FontSize="13"
+                              Content="Enable compact mode"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Recorder Capture ───────────────────────────────────────── -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Recorder Capture" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
+                        Choose which events are captured while recording. Changes apply immediately.
+                    </TextBlock>
+
+                    <CheckBox IsChecked="{Binding RecordKeyboardEvents}" FontSize="13" Margin="0,0,0,8"
+                              Content="Capture keyboard events"/>
+                    <CheckBox IsChecked="{Binding RecordMouseClickEvents}" FontSize="13" Margin="0,0,0,8"
+                              Content="Capture mouse click events"/>
+                    <CheckBox IsChecked="{Binding RecordMouseMoveEvents}" FontSize="13"
+                              Content="Capture mouse movement events"/>
+                </StackPanel>
+            </Border>
+
             <!-- ── Emergency Stop ──────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Emergency Stop" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#757575" Margin="0,0,0,12">
+                    <TextBlock Text="Emergency Stop" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
                         The fixed emergency-stop hotkey is always active while TapWeaver is running
                         (even when minimised). It immediately stops all macro playback, the auto-clicker,
                         and any ongoing recording, and releases all held keys and mouse buttons.
@@ -36,19 +68,24 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="Fixed shortcut:" FontSize="13"
+                        <TextBlock Grid.Column="0" Text="Fixed shortcut:" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}"
                                    VerticalAlignment="Center" Margin="0,0,12,0"/>
-                        <Border Grid.Column="1" Background="#FFF9C4" BorderBrush="#F9A825"
+                        <Border Grid.Column="1" Background="#22FFB347" BorderBrush="{StaticResource WarningBrush}"
                                 BorderThickness="1" CornerRadius="4" Padding="10,6"
                                 HorizontalAlignment="Left">
                             <TextBlock Text="{Binding EmergencyStopHotkeyText}"
-                                       FontSize="13" FontWeight="Bold" Foreground="#E65100"/>
+                                       FontSize="13" FontWeight="Bold" Foreground="{StaticResource WarningBrush}"/>
                         </Border>
-                        <Button Grid.Column="2" Content="🛑 Emergency Stop Now"
+                        <Button Grid.Column="2"
                                 Style="{StaticResource DangerButtonStyle}"
                                 Command="{Binding EmergencyStopCommand}"
                                 Height="36" Margin="12,0,0,0"
-                                ToolTip="Manually trigger the emergency stop"/>
+                                ToolTip="Manually trigger the emergency stop">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/alert.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Emergency Stop" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
                 </StackPanel>
             </Border>
@@ -56,8 +93,8 @@
             <!-- ── Global Hotkeys ──────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Global Hotkeys" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#757575" Margin="0,0,0,16">
+                    <TextBlock Text="Global Hotkeys" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,16">
                         Click a hotkey field and press a new key combination (at least one modifier key
                         — Ctrl, Alt, or Shift — is required). The change takes effect immediately.
                         Press Reset to restore the factory default.
@@ -71,7 +108,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Sequencer Playback (Start/Stop):"
-                                   FontSize="13" VerticalAlignment="Center"/>
+                                   FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="PlaybackHotkeyBox"
                                   Text="{Binding PlaybackHotkeyText, Mode=OneWay}"
@@ -79,10 +116,16 @@
                                   Style="{StaticResource ModernTextBoxStyle}"
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="PlaybackHotkeyBox_GotFocus"
+                                  LostKeyboardFocus="HotkeyBox_LostKeyboardFocus"
                                   PreviewKeyDown="PlaybackHotkeyBox_PreviewKeyDown"/>
-                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                        <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
-                                 Command="{Binding ResetPlaybackHotkeyCommand}"/>
+                                 Command="{Binding ResetPlaybackHotkeyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Reset" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <!-- Recording Toggle -->
@@ -93,7 +136,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Toggle Recording:"
-                                   FontSize="13" VerticalAlignment="Center"/>
+                                   FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="RecordingHotkeyBox"
                                   Text="{Binding RecordingHotkeyText, Mode=OneWay}"
@@ -101,10 +144,16 @@
                                   Style="{StaticResource ModernTextBoxStyle}"
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="RecordingHotkeyBox_GotFocus"
+                                  LostKeyboardFocus="HotkeyBox_LostKeyboardFocus"
                                   PreviewKeyDown="RecordingHotkeyBox_PreviewKeyDown"/>
-                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                        <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
-                                 Command="{Binding ResetRecordingHotkeyCommand}"/>
+                                 Command="{Binding ResetRecordingHotkeyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Reset" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <!-- Auto-Clicker Toggle -->
@@ -115,7 +164,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Toggle Auto Clicker:"
-                                   FontSize="13" VerticalAlignment="Center"/>
+                                   FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBox  Grid.Column="1"
                                   x:Name="AutoClickerHotkeyBox"
                                   Text="{Binding AutoClickerHotkeyText, Mode=OneWay}"
@@ -123,10 +172,16 @@
                                   Style="{StaticResource ModernTextBoxStyle}"
                                   ToolTip="Click here, then press a key combination"
                                   GotFocus="AutoClickerHotkeyBox_GotFocus"
+                                  LostKeyboardFocus="HotkeyBox_LostKeyboardFocus"
                                   PreviewKeyDown="AutoClickerHotkeyBox_PreviewKeyDown"/>
-                        <Button  Grid.Column="2" Content="Reset" Margin="8,0,0,0"
+                        <Button  Grid.Column="2" Margin="8,0,0,0"
                                  Style="{StaticResource SecondaryButtonStyle}" Height="32"
-                                 Command="{Binding ResetAutoClickerHotkeyCommand}"/>
+                                 Command="{Binding ResetAutoClickerHotkeyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/refresh.svg" Margin="0,0,6,0"/>
+                                <TextBlock Text="Reset" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
                 </StackPanel>
             </Border>

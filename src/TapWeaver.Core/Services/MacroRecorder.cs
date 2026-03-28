@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using TapWeaver.Core.Interop;
 using TapWeaver.Core.Input;
 using TapWeaver.Core.Models;
 
@@ -16,7 +17,18 @@ public class MacroRecorder : IDisposable
     private long _lastEventTime = 0;
     private bool _isRecording;
     private readonly object _lock = new();
-    private const int MinDelayThresholdMs = 50;
+    public uint? IgnoreModifiers { get; set; }
+    public uint? IgnoreVirtualKey { get; set; }
+    private const int MinDelayThresholdMs = 5;
+    private const int MinMouseMoveDistancePx = 4;
+    private const int MinMouseMoveIntervalMs = 25;
+    private int? _lastRecordedMouseX;
+    private int? _lastRecordedMouseY;
+    private long _lastMouseMoveTime;
+
+    public bool CaptureKeyboardEvents { get; set; } = true;
+    public bool CaptureMouseClickEvents { get; set; } = true;
+    public bool CaptureMouseMoveEvents { get; set; }
 
     public event Action<MacroStep>? StepRecorded;
     public bool IsRecording => _isRecording;
@@ -29,6 +41,9 @@ public class MacroRecorder : IDisposable
             _steps.Clear();
             _stopwatch.Restart();
             _lastEventTime = 0;
+            _lastMouseMoveTime = 0;
+            _lastRecordedMouseX = null;
+            _lastRecordedMouseY = null;
             _isRecording = true;
             InstallHooks();
         }
@@ -73,10 +88,14 @@ public class MacroRecorder : IDisposable
 
     private IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        if (nCode >= 0 && _isRecording)
+        if (nCode >= 0 && _isRecording && CaptureKeyboardEvents)
         {
             var hookStruct = Marshal.PtrToStructure<NativeMethods.KBDLLHOOKSTRUCT>(lParam);
             int msg = wParam.ToInt32();
+
+            if (IsHotkeyToIgnore(hookStruct))
+                return NativeMethods.CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+
             if (msg == NativeMethods.WM_KEYDOWN || msg == NativeMethods.WM_SYSKEYDOWN ||
                 msg == NativeMethods.WM_KEYUP || msg == NativeMethods.WM_SYSKEYUP)
             {
@@ -98,6 +117,18 @@ public class MacroRecorder : IDisposable
         {
             var hookStruct = Marshal.PtrToStructure<NativeMethods.MSLLHOOKSTRUCT>(lParam);
             int msg = wParam.ToInt32();
+
+            if (msg == NativeMethods.WM_MOUSEMOVE)
+            {
+                if (CaptureMouseMoveEvents)
+                    TryRecordMouseMove(hookStruct.pt.X, hookStruct.pt.Y);
+
+                return NativeMethods.CallNextHookEx(_mouseHook, nCode, wParam, lParam);
+            }
+
+            if (!CaptureMouseClickEvents)
+                return NativeMethods.CallNextHookEx(_mouseHook, nCode, wParam, lParam);
+
             MacroStepType? stepType = msg switch
             {
                 NativeMethods.WM_LBUTTONDOWN => MacroStepType.MouseClick,
@@ -128,6 +159,35 @@ public class MacroRecorder : IDisposable
         return NativeMethods.CallNextHookEx(_mouseHook, nCode, wParam, lParam);
     }
 
+    private void TryRecordMouseMove(int x, int y)
+    {
+        long now = _stopwatch.ElapsedMilliseconds;
+
+        if (_lastRecordedMouseX.HasValue && _lastRecordedMouseY.HasValue)
+        {
+            var dx = Math.Abs(x - _lastRecordedMouseX.Value);
+            var dy = Math.Abs(y - _lastRecordedMouseY.Value);
+            var movedEnough = dx >= MinMouseMoveDistancePx || dy >= MinMouseMoveDistancePx;
+            var elapsedEnough = now - _lastMouseMoveTime >= MinMouseMoveIntervalMs;
+
+            if (!movedEnough || !elapsedEnough)
+                return;
+        }
+
+        AddDelayIfNeeded();
+        var step = new MacroStep
+        {
+            Type = MacroStepType.MoveMouse,
+            X = x,
+            Y = y
+        };
+        lock (_lock) { _steps.Add(step); }
+        StepRecorded?.Invoke(step);
+        _lastRecordedMouseX = x;
+        _lastRecordedMouseY = y;
+        _lastMouseMoveTime = now;
+    }
+
     private void AddDelayIfNeeded()
     {
         long now = _stopwatch.ElapsedMilliseconds;
@@ -144,5 +204,31 @@ public class MacroRecorder : IDisposable
     {
         RemoveHooks();
         GC.SuppressFinalize(this);
+    }
+
+    private bool IsHotkeyToIgnore(NativeMethods.KBDLLHOOKSTRUCT hookStruct)
+    {
+        if (!IgnoreVirtualKey.HasValue)
+            return false;
+
+        if (hookStruct.vkCode != IgnoreVirtualKey.Value)
+            return false;
+
+        uint currentModifiers = GetCurrentModifierState();
+        uint ignoreMask = IgnoreModifiers ?? 0;
+
+        return (currentModifiers & ignoreMask) == ignoreMask;
+    }
+
+    private static uint GetCurrentModifierState()
+    {
+        uint modifiers = 0;
+        if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Control) != 0)
+            modifiers |= 0x0008;
+        if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Shift) != 0)
+            modifiers |= 0x0004;
+        if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Alt) != 0)
+            modifiers |= 0x0001;
+        return modifiers;
     }
 }

@@ -1,0 +1,16 @@
+<Window x:Class="TapWeaver.UI.Views.CoordinatePicker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowState="Maximized"
+        WindowStyle="None"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        AllowsTransparency="True"
+        MouseMove="Window_MouseMove"
+        MouseLeftButtonUp="Window_MouseLeftButtonUp">
+    <Grid Name="RootGrid">
+        <Canvas Background="#33000000"/>
+        <Canvas Name="CrosshairCanvas" />
+    </Grid>
+</Window>

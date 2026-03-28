@@ -1,6 +1,8 @@
 <UserControl x:Class="TapWeaver.UI.Views.RecorderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -9,14 +11,14 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <TextBlock Grid.Row="0" Text="Macro Recorder" FontSize="22" FontWeight="Bold"
-                   Foreground="#212121" Margin="0,0,0,16"/>
+        <TextBlock Grid.Row="0" Text="Macro Recorder" FontSize="20" FontWeight="Bold"
+               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
         <!-- Controls Card -->
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
             <StackPanel>
-                <TextBlock Text="Use the buttons below or configure a global hotkey to start/stop recording. All keyboard and mouse events will be captured and converted to a macro."
-                           TextWrapping="Wrap" Foreground="#757575" Margin="0,0,0,16" FontSize="13"/>
+                <TextBlock Text="Use the buttons below or configure a global hotkey to start/stop recording. Capture behavior can be adjusted in Settings."
+                           TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,16" FontSize="13"/>
 
                 <!-- Status Indicator -->
                 <Border CornerRadius="4" Padding="12,8" Margin="0,0,0,16" HorizontalAlignment="Left">
@@ -61,14 +63,26 @@
                 </Border>
 
                 <!-- Buttons -->
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Start Recording" Style="{StaticResource DangerButtonStyle}"
+                <WrapPanel>
+                    <Button Style="{StaticResource DangerButtonStyle}"
                             Command="{Binding StartRecordingCommand}"
-                            MinWidth="160" Height="44" Margin="0,0,12,0" FontSize="14"/>
-                    <Button Content="Stop and Use Macro" Style="{StaticResource SuccessButtonStyle}"
+                            MinWidth="178" Height="44" Margin="0,0,12,0" FontSize="14"
+                            ToolTip="Start capturing keyboard and mouse actions">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/record.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Start Recording" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource SuccessButtonStyle}"
                             Command="{Binding StopRecordingCommand}"
-                            MinWidth="160" Height="44" FontSize="14"/>
-                </StackPanel>
+                            MinWidth="178" Height="44" FontSize="14"
+                            ToolTip="Stop recording and send result to Sequencer">
+                        <StackPanel Orientation="Horizontal">
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/stop.svg" Margin="0,0,6,0"/>
+                            <TextBlock Text="Stop and Use" Style="{StaticResource HideInCompactModeTextStyle}"/>
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
             </StackPanel>
         </Border>
 
@@ -80,14 +94,17 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
-                    <TextBlock Text="Recorded Events" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="Recorded Events" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}"/>
                     <TextBlock Text="{Binding RecordedSteps.Count, StringFormat=' ({0} steps)'}"
-                               FontSize="13" Foreground="#757575" VerticalAlignment="Center"/>
+                               FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
                 <ListView Grid.Row="1" ItemsSource="{Binding RecordedSteps}"
-                          BorderThickness="0" Background="Transparent">
+                                                    Style="{StaticResource ModernListViewStyle}"
+                          HorizontalContentAlignment="Stretch"
+                                                    Margin="0,2,0,0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <ListView.View>
-                        <GridView>
+                                                <GridView ColumnHeaderContainerStyle="{StaticResource ModernGridViewHeaderStyle}">
                             <GridViewColumn Header="Type" Width="120"
                                             DisplayMemberBinding="{Binding Type}"/>
                             <GridViewColumn Header="Key/Button" Width="120"
@@ -102,4 +119,5 @@
             </Grid>
         </Border>
     </Grid>
+    </ScrollViewer>
 </UserControl>
