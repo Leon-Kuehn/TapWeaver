@@ -38,15 +38,12 @@ public partial class MainWindow : Window
         {
             // Apply persisted always-on-top setting
             Topmost = vm.AlwaysOnTop;
-            ApplyCompactMode(vm.CompactMode);
 
             // Keep Topmost in sync when the user changes it in Settings
             vm.PropertyChanged += (_, args) =>
             {
                 if (args.PropertyName == nameof(MainViewModel.AlwaysOnTop))
                     Topmost = vm.AlwaysOnTop;
-                else if (args.PropertyName == nameof(MainViewModel.CompactMode))
-                    ApplyCompactMode(vm.CompactMode);
             };
 
             // Register global hotkeys now that we have a valid HWND
@@ -72,27 +69,6 @@ public partial class MainWindow : Window
             handled = true;
         }
         return IntPtr.Zero;
-    }
-
-    private void ApplyCompactMode(bool compactMode)
-    {
-        if (compactMode)
-        {
-            MinWidth = 720;
-            MinHeight = 480;
-            if (Width > 920)
-                Width = 920;
-            if (Height > 620)
-                Height = 620;
-            return;
-        }
-
-        MinWidth = 920;
-        MinHeight = 620;
-        if (Width < 1000)
-            Width = 1180;
-        if (Height < 680)
-            Height = 760;
     }
 
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

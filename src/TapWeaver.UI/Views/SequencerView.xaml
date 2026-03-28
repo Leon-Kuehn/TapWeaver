@@ -81,7 +81,7 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                                         <TextBlock Text="Repeat mode" Style="{StaticResource FieldLabelStyle}"/>
-                                        <ComboBox ItemsSource="{Binding RepeatModes}" SelectedItem="{Binding RepeatMode}" Style="{StaticResource ModernComboBoxStyle}" Foreground="Black" IsEnabled="{Binding IsEditable}"/>
+                                        <ComboBox ItemsSource="{Binding RepeatModes}" SelectedItem="{Binding RepeatMode}" Style="{StaticResource ModernComboBoxStyle}" IsEnabled="{Binding IsEditable}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Text="Count" Style="{StaticResource FieldLabelStyle}"/>
@@ -105,7 +105,6 @@
                                               DisplayMemberPath="DisplayName"
                                               SelectedItem="{Binding SelectedWindow, UpdateSourceTrigger=PropertyChanged}"
                                               Style="{StaticResource ModernComboBoxStyle}"
-                                              Foreground="Black"
                                               Margin="0,0,8,0"
                                               IsEnabled="{Binding IsEditable}"/>
                                     <Button Grid.Column="1"
@@ -224,7 +223,7 @@
                                         <DataTemplate>
                                             <ComboBox ItemsSource="{Binding DataContext.StepTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                       SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
-                                                      Foreground="Black"
+                                                      Foreground="{DynamicResource TextPrimaryBrush}"
                                                       BorderThickness="0"
                                                       Background="Transparent"/>
                                         </DataTemplate>
@@ -239,17 +238,73 @@
                                                       IsEditable="False"
                                                       IsTextSearchEnabled="True"
                                                       StaysOpenOnEdit="False"
-                                                      Foreground="Black"
+                                                      Foreground="{DynamicResource TextPrimaryBrush}"
                                                       BorderThickness="0"
                                                       Background="Transparent"
                                                       IsEnabled="{Binding HasSelectableInput}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Hold" Width="0.7*" MinWidth="72" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Delay" Width="0.7*" MinWidth="72" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="X" Width="0.6*" MinWidth="64" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DataGridTextColumn Header="Y" Width="0.6*" MinWidth="64" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
+                                <DataGridTextColumn Header="Hold" Width="0.7*" MinWidth="72" Binding="{Binding HoldMs, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource ModernTextBoxStyle}">
+                                            <Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Delay" Width="0.7*" MinWidth="72" Binding="{Binding DelayMs, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource ModernTextBoxStyle}">
+                                            <Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="X" Width="0.6*" MinWidth="64" Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource ModernTextBoxStyle}">
+                                            <Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Y" Width="0.6*" MinWidth="64" Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource ModernTextBoxStyle}">
+                                            <Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Description" Width="2.1*" MinWidth="180" IsReadOnly="True" Binding="{Binding Description}"/>
                             </DataGrid.Columns>
 

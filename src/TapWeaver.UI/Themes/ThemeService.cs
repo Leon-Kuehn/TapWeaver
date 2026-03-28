@@ -21,6 +21,8 @@ public static class ThemeService
         ApplyColor(app.Resources, "TextPrimaryColor", useDarkMode ? "#F3F5F7" : "#212121");
         ApplyColor(app.Resources, "TextSecondaryColor", useDarkMode ? "#A8B1BA" : "#757575");
         ApplyColor(app.Resources, "BorderColor", useDarkMode ? "#2C353F" : "#E0E0E0");
+        ApplyColor(app.Resources, "InputBackgroundColor", useDarkMode ? "#2A3642" : "#F9FCFF");
+        ApplyColor(app.Resources, "InputForegroundColor", useDarkMode ? "#F3F5F7" : "#0F172A");
 
         ApplyBrushColor(app.Resources, "PrimaryBrush", useDarkMode ? "#4DA3FF" : "#2196F3");
         ApplyBrushColor(app.Resources, "AccentBrush", useDarkMode ? "#2E7DD1" : "#1565C0");
@@ -32,6 +34,8 @@ public static class ThemeService
         ApplyBrushColor(app.Resources, "TextPrimaryBrush", useDarkMode ? "#F3F5F7" : "#212121");
         ApplyBrushColor(app.Resources, "TextSecondaryBrush", useDarkMode ? "#A8B1BA" : "#757575");
         ApplyBrushColor(app.Resources, "CardBorderBrush", useDarkMode ? "#2C353F" : "#E0E0E0");
+        ApplyBrushColor(app.Resources, "InputBackgroundBrush", useDarkMode ? "#2A3642" : "#F9FCFF");
+        ApplyBrushColor(app.Resources, "InputForegroundBrush", useDarkMode ? "#F3F5F7" : "#0F172A");
     }
 
     private static void ApplyColor(ResourceDictionary resources, string key, string hex)

@@ -88,7 +88,6 @@
                         <ComboBox ItemsSource="{Binding MouseButtons}"
                                   SelectedItem="{Binding Button}"
                                   Style="{StaticResource ModernComboBoxStyle}" Width="180" HorizontalAlignment="Left"
-                                  Foreground="Black"
                                   Margin="0,0,0,16"/>
                     </StackPanel>
 

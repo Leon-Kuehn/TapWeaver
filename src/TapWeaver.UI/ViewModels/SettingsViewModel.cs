@@ -27,10 +27,6 @@ public class SettingsViewModel : ViewModelBase
                     OnPropertyChanged(nameof(AutoClickerHotkeyText)); break;
                 case nameof(MainViewModel.AlwaysOnTop):
                     OnPropertyChanged(nameof(AlwaysOnTop)); break;
-                case nameof(MainViewModel.UseDarkMode):
-                    OnPropertyChanged(nameof(UseDarkMode)); break;
-                case nameof(MainViewModel.CompactMode):
-                    OnPropertyChanged(nameof(CompactMode)); break;
             }
         };
 
@@ -59,18 +55,6 @@ public class SettingsViewModel : ViewModelBase
     {
         get => _main.AlwaysOnTop;
         set => _main.AlwaysOnTop = value;
-    }
-
-    public bool UseDarkMode
-    {
-        get => _main.UseDarkMode;
-        set => _main.UseDarkMode = value;
-    }
-
-    public bool CompactMode
-    {
-        get => _main.CompactMode;
-        set => _main.CompactMode = value;
     }
 
     public bool RecordKeyboardEvents
