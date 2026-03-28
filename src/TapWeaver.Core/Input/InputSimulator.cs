@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using TapWeaver.Core.Interop;
 using TapWeaver.Core.Models;
 
 namespace TapWeaver.Core.Input;

@@ -6,6 +6,9 @@ using TapWeaver.UI.Themes;
 
 namespace TapWeaver.UI.ViewModels;
 
+/// <summary>
+/// Main shell view model that coordinates page navigation, global hotkeys and shared app state.
+/// </summary>
 public class MainViewModel : ViewModelBase, IDisposable
 {
     public enum AppPage
@@ -146,7 +149,7 @@ public class MainViewModel : ViewModelBase, IDisposable
         _autoClickerService = new AutoClickerService();
 
         Recorder    = new RecorderViewModel(_macroRecorder, _appSettings);
-        Sequencer   = new SequencerViewModel(_macroPlayer);
+        Sequencer   = new SequencerViewModel(_macroPlayer, _appSettings);
         AutoClicker = new AutoClickerViewModel(_autoClickerService);
         Settings    = new SettingsViewModel(this);
 
@@ -156,6 +159,7 @@ public class MainViewModel : ViewModelBase, IDisposable
         ShowSettingsCommand = new RelayCommand(() => SelectedPage = AppPage.Settings);
 
         Recorder.RecordingComplete += macro => Sequencer.LoadMacro(macro);
+        Sequencer.PropertyChanged += HandleSequencerPropertyChanged;
     }
 
     // ── Hotkey infrastructure ─────────────────────────────────────────────────
@@ -373,8 +377,24 @@ public class MainViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
+        Sequencer.PropertyChanged -= HandleSequencerPropertyChanged;
         _hotkeyService?.Dispose();
         _macroRecorder.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    private void HandleSequencerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SequencerViewModel.RouteInputToSelectedWindow))
+        {
+            _appSettings.RouteInputToSelectedWindow = Sequencer.RouteInputToSelectedWindow;
+            AppSettingsSerializer.Save(_appSettings);
+        }
+
+        if (e.PropertyName == nameof(SequencerViewModel.TargetWindowHandle))
+        {
+            _appSettings.TargetWindowHandle = Sequencer.TargetWindowHandle.ToInt64();
+            AppSettingsSerializer.Save(_appSettings);
+        }
     }
 }

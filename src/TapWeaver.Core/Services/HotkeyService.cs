@@ -1,4 +1,4 @@
-using TapWeaver.Core.Input;
+using TapWeaver.Core.Interop;
 
 namespace TapWeaver.Core.Services;
 

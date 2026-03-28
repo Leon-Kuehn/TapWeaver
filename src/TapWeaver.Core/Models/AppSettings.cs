@@ -44,4 +44,14 @@ public class AppSettings
         Modifiers  = HotkeyConfig.MOD_CONTROL,
         VirtualKey = HotkeyConfig.VK_F9
     };
+
+    /// <summary>
+    /// Enables keyboard message routing to a selected target window handle.
+    /// </summary>
+    public bool RouteInputToSelectedWindow { get; set; } = false;
+
+    /// <summary>
+    /// Last selected target window handle. Stored as Int64 for JSON portability.
+    /// </summary>
+    public long TargetWindowHandle { get; set; } = 0;
 }

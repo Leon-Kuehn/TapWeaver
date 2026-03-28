@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Windows.Forms;
 using TapWeaver.Core.Input;
+using TapWeaver.Core.Interop;
 using TapWeaver.Core.Models;
 
 namespace TapWeaver.Core.Services;
@@ -13,10 +15,12 @@ public class MacroPlayer
 
     private CancellationTokenSource? _cts;
     private readonly Dictionary<ushort, bool> _pressedKeys = new();
+    private readonly WindowInputSender _windowInputSender = new();
     private PlaybackStopReason _pendingStopReason = PlaybackStopReason.Completed;
 
     public event Action<int>? StepChanged;
     public event Action? PlaybackStarted;
+    public event Action<string>? PlaybackInfo;
 
     /// <summary>
     /// Raised when playback ends for any reason.
@@ -25,6 +29,17 @@ public class MacroPlayer
     public event Action<PlaybackStopReason>? PlaybackStopped;
 
     public bool IsPlaying { get; private set; }
+
+    /// <summary>
+    /// When enabled, keyboard events are posted to <see cref="TargetWindowHandle"/>.
+    /// Mouse steps continue to use global SendInput behavior.
+    /// </summary>
+    public bool RouteInputToSelectedWindow { get; set; }
+
+    /// <summary>
+    /// Target top-level window handle for routed keyboard events.
+    /// </summary>
+    public IntPtr TargetWindowHandle { get; set; }
 
     public static ushort GetVkCode(string key)
     {
@@ -36,6 +51,10 @@ public class MacroPlayer
     public void Play(Macro macro)
     {
         if (IsPlaying) return;
+
+        if (RouteInputToSelectedWindow && !HasValidTargetWindow())
+            DisableWindowRouting("Target window is no longer available. Routing disabled.");
+
         _cts = new CancellationTokenSource();
         _pendingStopReason = PlaybackStopReason.Completed;
         IsPlaying = true;
@@ -148,7 +167,7 @@ public class MacroPlayer
                     var vk = GetVkCode(step.Key);
                     if (vk != 0)
                     {
-                        InputSimulator.SendKeyDown(vk);
+                        SendKeyDown(vk);
                         _pressedKeys[vk] = true;
                     }
                 }
@@ -159,7 +178,7 @@ public class MacroPlayer
                     var vk = GetVkCode(step.Key);
                     if (vk != 0)
                     {
-                        InputSimulator.SendKeyUp(vk);
+                        SendKeyUp(vk);
                         _pressedKeys.Remove(vk);
                     }
                 }
@@ -170,11 +189,11 @@ public class MacroPlayer
                     var vk = GetVkCode(step.Key);
                     if (vk != 0)
                     {
-                        InputSimulator.SendKeyDown(vk);
+                        SendKeyDown(vk);
                         _pressedKeys[vk] = true;
                         timeline.Ms += Math.Max(step.HoldMs, 1);
                         await WaitForTimelineAsync(playbackClock, timeline.Ms, highPrecisionTiming, token);
-                        InputSimulator.SendKeyUp(vk);
+                        SendKeyUp(vk);
                         _pressedKeys.Remove(vk);
                     }
                 }
@@ -228,8 +247,70 @@ public class MacroPlayer
     {
         foreach (var key in _pressedKeys.Keys.ToList())
         {
-            InputSimulator.SendKeyUp(key);
+            SendKeyUp(key);
         }
         _pressedKeys.Clear();
+    }
+
+    private void SendKeyDown(ushort vk)
+    {
+        if (TrySendKeyDownToTarget(vk))
+            return;
+
+        InputSimulator.SendKeyDown(vk);
+    }
+
+    private void SendKeyUp(ushort vk)
+    {
+        if (TrySendKeyUpToTarget(vk))
+            return;
+
+        InputSimulator.SendKeyUp(vk);
+    }
+
+    private bool TrySendKeyDownToTarget(ushort vk)
+    {
+        if (!RouteInputToSelectedWindow || TargetWindowHandle == IntPtr.Zero)
+            return false;
+
+        if (!HasValidTargetWindow())
+        {
+            DisableWindowRouting("Target window was closed. Routing disabled.");
+            return false;
+        }
+
+        if (_windowInputSender.TrySendKeyDown(TargetWindowHandle, (Keys)vk))
+            return true;
+
+        DisableWindowRouting("Failed to send key to target window. Routing disabled.");
+        return false;
+    }
+
+    private bool TrySendKeyUpToTarget(ushort vk)
+    {
+        if (!RouteInputToSelectedWindow || TargetWindowHandle == IntPtr.Zero)
+            return false;
+
+        if (!HasValidTargetWindow())
+        {
+            DisableWindowRouting("Target window was closed. Routing disabled.");
+            return false;
+        }
+
+        if (_windowInputSender.TrySendKeyUp(TargetWindowHandle, (Keys)vk))
+            return true;
+
+        DisableWindowRouting("Failed to send key to target window. Routing disabled.");
+        return false;
+    }
+
+    private bool HasValidTargetWindow()
+        => TargetWindowHandle != IntPtr.Zero && NativeMethods.IsWindow(TargetWindowHandle);
+
+    private void DisableWindowRouting(string info)
+    {
+        RouteInputToSelectedWindow = false;
+        TargetWindowHandle = IntPtr.Zero;
+        PlaybackInfo?.Invoke(info);
     }
 }

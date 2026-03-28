@@ -1,7 +1,8 @@
 ## .NET build artifacts
 bin/
 obj/
+publish/
+artifacts/
 *.user
 *.suo
 .vs/
-publish/

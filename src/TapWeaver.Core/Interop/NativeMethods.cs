@@ -1,7 +1,11 @@
 using System.Runtime.InteropServices;
+using System.Text;
 
-namespace TapWeaver.Core.Input;
+namespace TapWeaver.Core.Interop;
 
+/// <summary>
+/// Centralized Win32 interop declarations used by input, hotkeys and hooks.
+/// </summary>
 internal static class NativeMethods
 {
     public const int WH_KEYBOARD_LL = 13;
@@ -32,6 +36,7 @@ internal static class NativeMethods
     public const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
     public const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
     public const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
+    public const int MAPVK_VK_TO_VSC = 0;
 
     [DllImport("user32.dll", SetLastError = true)]
     public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
@@ -59,12 +64,35 @@ internal static class NativeMethods
     public static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
     [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+    [DllImport("user32.dll")]
+    public static extern int GetWindowTextLength(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsWindowVisible(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll")]
     public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 
     [DllImport("user32.dll")]
     public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
     public delegate IntPtr LowLevelProc(int nCode, IntPtr wParam, IntPtr lParam);
+    public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT

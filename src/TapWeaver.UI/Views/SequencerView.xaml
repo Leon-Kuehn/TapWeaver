@@ -93,6 +93,38 @@
                                 <CheckBox Content="High precision timing" IsChecked="{Binding HighPrecisionTiming}" IsEnabled="{Binding IsEditable}" Margin="0,0,0,10"/>
                                 <TextBlock Text="Start/stop hotkey" Style="{StaticResource FieldLabelStyle}"/>
                                 <TextBlock Text="{Binding DataContext.PlaybackHotkeyText, RelativeSource={RelativeSource AncestorType=Window}}" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold"/>
+
+                                <TextBlock Text="Target window" Style="{StaticResource FieldLabelStyle}" Margin="0,10,0,0"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Grid.Column="0"
+                                              ItemsSource="{Binding OpenWindows}"
+                                              DisplayMemberPath="DisplayName"
+                                              SelectedItem="{Binding SelectedWindow, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource ModernComboBoxStyle}"
+                                              Foreground="Black"
+                                              Margin="0,0,8,0"
+                                              IsEnabled="{Binding IsEditable}"/>
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource SecondaryButtonStyle}"
+                                            Command="{Binding RefreshWindowsCommand}"
+                                            Content="Fensterliste aktualisieren"
+                                            Padding="12,0"
+                                            Height="34"
+                                            IsEnabled="{Binding IsEditable}"/>
+                                </Grid>
+
+                                <CheckBox Content="Route input to selected window"
+                                          IsChecked="{Binding RouteInputToSelectedWindow, UpdateSourceTrigger=PropertyChanged}"
+                                          IsEnabled="{Binding IsEditable}"/>
+                                <TextBlock Text="{Binding WindowRoutingInfo}"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="11"
+                                           TextWrapping="Wrap"
+                                           Margin="0,6,0,0"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using TapWeaver.Core.Interop;
 using TapWeaver.Core.Input;
 using TapWeaver.Core.Models;
 
