@@ -5,7 +5,8 @@
         xmlns:views="clr-namespace:TapWeaver.UI.Views"
         xmlns:vm="clr-namespace:TapWeaver.UI.ViewModels"
         xmlns:svg="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf"
-        Title="TapWeaver" Height="760" Width="1180"
+    Title="TapWeaver Studio" Height="760" Width="1180"
+    Icon="/Resources/Icons/tapweaver.ico"
         MinHeight="620" MinWidth="920"
         Background="{StaticResource BackgroundBrush}"
         WindowStartupLocation="CenterScreen"
@@ -36,9 +37,9 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#0F172A" Offset="0"/>
-                <GradientStop Color="#1F2937" Offset="0.5"/>
-                <GradientStop Color="#111827" Offset="1"/>
+                <GradientStop Color="#0D1A28" Offset="0"/>
+                <GradientStop Color="#14314A" Offset="0.48"/>
+                <GradientStop Color="#102A3D" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
 
@@ -47,11 +48,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Ellipse Grid.Row="1" Width="340" Height="340" Fill="#202196F3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-100,-100,0,0"/>
-        <Ellipse Grid.Row="1" Width="300" Height="300" Fill="#164CAF50" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-70,-70"/>
+        <Ellipse Grid.Row="1" Width="340" Height="340" Fill="#206BCBFF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-100,-100,0,0"/>
+        <Ellipse Grid.Row="1" Width="300" Height="300" Fill="#144FC3F7" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-70,-70"/>
 
         <!-- Custom Title Bar -->
-        <Border Grid.Row="0" Background="#D91B2229" BorderBrush="#334155" BorderThickness="0,0,0,1"
+        <Border Grid.Row="0" Background="#D9142534" BorderBrush="#335A7D" BorderThickness="0,0,0,1"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid Margin="9,5,8,5">
                 <Grid.ColumnDefinitions>
@@ -60,13 +61,13 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="22" Height="22" Background="#223B82F6" CornerRadius="7" Margin="0,0,8,0">
+                    <Border Width="22" Height="22" Background="#1D4A67" CornerRadius="7" Margin="0,0,8,0">
                         <Viewbox Margin="4">
-                            <svg:SvgViewbox Width="14" Height="14" Source="/Assets/Icons/play.svg"/>
+                            <svg:SvgViewbox Width="14" Height="14" Source="/Resources/Icons/tapweaver-logo.svg"/>
                         </Viewbox>
                     </Border>
-                    <TextBlock Text="TapWeaver" FontSize="16" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
-                    <TextBlock Text="  studio" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"
+                    <TextBlock Text="TapWeaver" FontSize="16" FontWeight="SemiBold" Foreground="#EAF7FF" VerticalAlignment="Center"/>
+                    <TextBlock Text="  studio" FontSize="12" Foreground="#95B6CC" VerticalAlignment="Center"
                                Style="{StaticResource HideInCompactModeTextStyle}"/>
                 </StackPanel>
 
@@ -91,7 +92,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Width="220" CornerRadius="14" Background="#D91B2229" BorderBrush="#334155" BorderThickness="1" Padding="8">
+            <Border Grid.Column="0" Width="220" CornerRadius="14" Background="#D8142534" BorderBrush="#335A7D" BorderThickness="1" Padding="8">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Setter Property="Width" Value="220"/>

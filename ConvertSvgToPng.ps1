@@ -1,51 +1,126 @@
-[void][System.Reflection.Assembly]::LoadWithPartialName("PresentationCore")
-[void][System.Reflection.Assembly]::LoadWithPartialName("PresentationFramework")
-[void][System.Reflection.Assembly]::LoadWithPartialName("WindowsBase")
+param(
+    [string]$OutputDir = "c:\DEV\TapWeaver\src\TapWeaver.UI\Resources\Icons"
+)
 
-# SVG to PNG conversion using WPF
-$svgPath = "c:\DEV\TapWeaver\src\TapWeaver.UI\Assets\AppIcon.svg"
-$pngPath = "c:\DEV\TapWeaver\src\TapWeaver.UI\Assets\AppIcon.png"
-$icoPath = "c:\DEV\TapWeaver\src\TapWeaver.UI\Assets\AppIcon.ico"
+Add-Type -AssemblyName System.Drawing
 
-# Create a DrawingImage from SVG and render to PNG
-try {
-    # Read SVG as string
-    $svgContent = Get-Content $svgPath -Raw
-    
-    # Use a simple approach: render SVG with a RenderTargetBitmap
-    $renderTarget = New-Object System.Windows.Media.Imaging.RenderTargetBitmap(256, 256, 96, 96, [System.Windows.Media.PixelFormats]::Pbgra32)
-    
-    # Create a DrawingVisual with the SVG rendered
-    $visual = New-Object System.Windows.Media.DrawingVisual
-    $dc = $visual.RenderOpen()
-    
-    # Parse SVG and get a basic rectangle placeholder (SVG parsing is complex)
-    # For now, we'll create a colored square as a placeholder 
-    $brush = New-Object System.Windows.Media.SolidColorBrush([System.Windows.Media.Colors]::CornflowerBlue)
-    $pen = New-Object System.Windows.Media.Pen($brush, 2)
-    
-    $dc.DrawRectangle($brush, $pen, (New-Object System.Windows.Rect(10, 10, 236, 236)))
-    
-    # Draw "TW" text
-    $typeface = New-Object System.Windows.Media.Typeface("Arial", [System.Windows.FontStyles]::Normal, [System.Windows.FontWeights]::Bold, [System.Windows.FontStretches]::Normal)
-    $formattedText = New-Object System.Windows.Media.FormattedText("TW", [System.Globalization.CultureInfo]::InvariantCulture, [System.Windows.FlowDirection]::LeftToRight, $typeface, 80, [System.Windows.Media.Brushes]::White)
-    
-    $textPoint = New-Object System.Windows.Point(80, 85)
-    $dc.DrawText($formattedText, $textPoint)
-    $dc.Close()
-    
-    # Render to bitmap
-    $renderTarget.Render($visual)
-    
-    # Save as PNG
-    $encoder = New-Object System.Windows.Media.Imaging.PngBitmapEncoder
-    $encoder.Frames.Add([System.Windows.Media.Imaging.BitmapFrame]::Create($renderTarget))
-    
-    $fileStream = New-Object System.IO.FileStream($pngPath, [System.IO.FileMode]::Create)
-    $encoder.Save($fileStream)
-    $fileStream.Close()
-    
-    Write-Host "✓ PNG created: $pngPath"
-} catch {
-    Write-Host "✗ Error creating PNG: $_"
+function Write-IcoFromPngs {
+    param(
+        [string[]]$PngPaths,
+        [string]$IcoPath
+    )
+
+    $stream = New-Object System.IO.MemoryStream
+    $writer = New-Object System.IO.BinaryWriter($stream)
+
+    $writer.Write([UInt16]0)
+    $writer.Write([UInt16]1)
+    $writer.Write([UInt16]$PngPaths.Count)
+
+    $images = @()
+    foreach ($path in $PngPaths) {
+        $bytes = [System.IO.File]::ReadAllBytes($path)
+        $size = [int]([System.IO.Path]::GetFileNameWithoutExtension($path))
+        $images += [PSCustomObject]@{ Size = $size; Bytes = $bytes }
+    }
+
+    $offset = 6 + (16 * $images.Count)
+    foreach ($image in $images) {
+        $sizeByte = if ($image.Size -ge 256) { [byte]0 } else { [byte]$image.Size }
+        $writer.Write($sizeByte)
+        $writer.Write($sizeByte)
+        $writer.Write([byte]0)
+        $writer.Write([byte]0)
+        $writer.Write([UInt16]1)
+        $writer.Write([UInt16]32)
+        $writer.Write([UInt32]$image.Bytes.Length)
+        $writer.Write([UInt32]$offset)
+        $offset += $image.Bytes.Length
+    }
+
+    foreach ($image in $images) {
+        $writer.Write($image.Bytes)
+    }
+
+    [System.IO.File]::WriteAllBytes($IcoPath, $stream.ToArray())
+    $writer.Dispose()
+    $stream.Dispose()
 }
+
+function New-LogoBitmap {
+    param([int]$IconSize)
+
+    $bitmap = New-Object System.Drawing.Bitmap -ArgumentList $IconSize, $IconSize
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $graphics.Clear([System.Drawing.Color]::Transparent)
+
+    $startPoint = New-Object System.Drawing.Point -ArgumentList 0, 0
+    $endPoint = New-Object System.Drawing.Point -ArgumentList $IconSize, $IconSize
+    $backgroundBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush -ArgumentList $startPoint, $endPoint, ([System.Drawing.Color]::FromArgb(255, 30, 30, 46)), ([System.Drawing.Color]::FromArgb(255, 42, 42, 62))
+
+    $graphics.FillRectangle($backgroundBrush, 0, 0, $IconSize, $IconSize)
+
+    $strokeScale = [Math]::Max(1, [int]($IconSize / 24))
+    $accentPen = New-Object System.Drawing.Pen -ArgumentList ([System.Drawing.Color]::FromArgb(255, 127, 219, 255)), (3 * $strokeScale)
+    $accentPen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
+    $accentPen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
+    $accentPen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
+
+    $monitorPen = New-Object System.Drawing.Pen -ArgumentList ([System.Drawing.Color]::FromArgb(255, 58, 58, 92)), (2 * $strokeScale)
+    $monitorRect = New-Object System.Drawing.Rectangle -ArgumentList ([int]($IconSize * 0.2)), ([int]($IconSize * 0.22)), ([int]($IconSize * 0.6)), ([int]($IconSize * 0.56))
+    $graphics.DrawRectangle($monitorPen, $monitorRect)
+
+    $barBrush = New-Object System.Drawing.SolidBrush -ArgumentList ([System.Drawing.Color]::FromArgb(255, 58, 58, 92))
+    $graphics.FillRectangle($barBrush, [int]($IconSize * 0.27), [int]($IconSize * 0.29), [int]($IconSize * 0.46), [int]($IconSize * 0.06))
+
+    $graphics.DrawBezier(
+        $accentPen,
+        [int]($IconSize * 0.28), [int]($IconSize * 0.4),
+        [int]($IconSize * 0.38), [int]($IconSize * 0.33),
+        [int]($IconSize * 0.46), [int]($IconSize * 0.64),
+        [int]($IconSize * 0.5), [int]($IconSize * 0.64)
+    )
+    $graphics.DrawBezier(
+        $accentPen,
+        [int]($IconSize * 0.5), [int]($IconSize * 0.64),
+        [int]($IconSize * 0.54), [int]($IconSize * 0.64),
+        [int]($IconSize * 0.62), [int]($IconSize * 0.33),
+        [int]($IconSize * 0.72), [int]($IconSize * 0.4)
+    )
+
+    $dotBrush = New-Object System.Drawing.SolidBrush -ArgumentList ([System.Drawing.Color]::FromArgb(255, 79, 195, 247))
+    $dotSize = [Math]::Max(2, [int]($IconSize * 0.08))
+    $dotX = [int]($IconSize * 0.5) - [int]($dotSize / 2)
+    $dotY = [int]($IconSize * 0.64) - [int]($dotSize / 2)
+    $graphics.FillEllipse($dotBrush, $dotX, $dotY, $dotSize, $dotSize)
+
+    $backgroundBrush.Dispose()
+    $accentPen.Dispose()
+    $monitorPen.Dispose()
+    $barBrush.Dispose()
+    $dotBrush.Dispose()
+    $graphics.Dispose()
+
+    return $bitmap
+}
+
+if (-not (Test-Path $OutputDir)) {
+    New-Item -ItemType Directory -Path $OutputDir | Out-Null
+}
+
+$sizes = @(16, 24, 32, 48, 64, 128, 256)
+$pngPaths = @()
+
+foreach ($iconSize in $sizes) {
+    $bitmap = New-LogoBitmap -IconSize $iconSize
+    $pngPath = Join-Path $OutputDir ("{0}.png" -f $iconSize)
+    $bitmap.Save($pngPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bitmap.Dispose()
+    $pngPaths += $pngPath
+    Write-Host ("PNG generated: {0}" -f $pngPath)
+}
+
+$icoPath = Join-Path $OutputDir "tapweaver.ico"
+Write-IcoFromPngs -PngPaths $pngPaths -IcoPath $icoPath
+Write-Host ("ICO generated: {0}" -f $icoPath)
