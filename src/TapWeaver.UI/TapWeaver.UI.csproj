@@ -24,9 +24,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\tapweaver-logo.svg" />
+    <Resource Include="Resources\Icons\tapweaver.ico" />
     <Resource Include="Assets\Icons\*.svg" />
     <Resource Include="Resources\Styles\BaseStyles.xaml" />
-    <None Include="Resources\Icons\tapweaver.ico" />
     <None Include="Resources\Icons\*.png" />
   </ItemGroup>
 </Project>

@@ -11,9 +11,10 @@
         Background="{StaticResource BackgroundBrush}"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
+        AllowsTransparency="False"
         ResizeMode="CanResize">
     <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="0" CornerRadius="0" GlassFrameThickness="0" ResizeBorderThickness="6" UseAeroCaptionButtons="False"/>
+        <shell:WindowChrome CaptionHeight="0" CornerRadius="16" GlassFrameThickness="0" ResizeBorderThickness="6" UseAeroCaptionButtons="False"/>
     </shell:WindowChrome.WindowChrome>
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -34,6 +35,7 @@
         </DataTemplate>
     </Window.Resources>
 
+    <Border CornerRadius="16" ClipToBounds="True">
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -78,7 +80,7 @@
                     <Button Style="{StaticResource TitleBarActionButtonStyle}" Click="MaximizeRestoreButton_Click" ToolTip="Maximize/Restore" Margin="0,0,6,0">
                         <svg:SvgViewbox Width="12" Height="12" Source="/Assets/Icons/maximize.svg"/>
                     </Button>
-                    <Button Style="{StaticResource TitleBarActionButtonStyle}" Click="CloseButton_Click" ToolTip="Close">
+                    <Button Style="{StaticResource TitleBarActionButtonStyle}" Click="CloseButton_Click" ToolTip="Close" Tag="Close">
                         <svg:SvgViewbox Width="12" Height="12" Source="/Assets/Icons/close.svg"/>
                     </Button>
                 </StackPanel>
@@ -93,16 +95,6 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Width="220" CornerRadius="14" Background="#D8142534" BorderBrush="#335A7D" BorderThickness="1" Padding="8">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Setter Property="Width" Value="220"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CompactMode}" Value="True">
-                                <Setter Property="Width" Value="78"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -140,11 +132,10 @@
                         </Button>
                     </StackPanel>
 
-                    <Expander Grid.Row="2" Header="Appearance" Foreground="#CBD5E1" Margin="2,10,2,0">
+                    <Expander Grid.Row="2" Header="Window" Foreground="#CBD5E1" Margin="2,10,2,0">
                         <StackPanel Margin="0,8,0,0">
                             <CheckBox IsChecked="{Binding AlwaysOnTop}" Content="Always on top" Foreground="#CBD5E1" FontSize="11" Margin="2,0,0,6"/>
-                            <CheckBox IsChecked="{Binding UseDarkMode}" Content="Dark mode" Foreground="#CBD5E1" FontSize="11" Margin="2,0,0,6"/>
-                            <CheckBox IsChecked="{Binding CompactMode}" Content="Compact" Foreground="#CBD5E1" FontSize="11" Margin="2,0,0,2"/>
+                            <TextBlock Text="Dark theme is always enabled" Foreground="#94A3B8" FontSize="11" Margin="4,0,0,2"/>
                         </StackPanel>
                     </Expander>
                 </Grid>
@@ -153,4 +144,5 @@
             <ContentControl Grid.Column="2" Content="{Binding CurrentPageViewModel}"/>
         </Grid>
     </Grid>
+    </Border>
 </Window>

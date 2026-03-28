@@ -23,14 +23,11 @@
             <!-- ── Appearance ─────────────────────────────────────────────── -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Appearance" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock Text="Visual Style" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12">
-                        Switch visual theme and layout density. Compact mode condenses the window for a tighter, TinyTask-like workspace.
+                        TapWeaver uses a single optimized dark workspace for consistent contrast and reduced visual fatigue.
                     </TextBlock>
-                    <CheckBox IsChecked="{Binding UseDarkMode}" FontSize="13"
-                              Content="Enable dark mode" Margin="0,0,0,8"/>
-                    <CheckBox IsChecked="{Binding CompactMode}" FontSize="13"
-                              Content="Enable compact mode"/>
+                    <TextBlock Text="Theme: Midnight" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
                 </StackPanel>
             </Border>
 

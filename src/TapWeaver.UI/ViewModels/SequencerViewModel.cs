@@ -344,18 +344,27 @@ public class SequencerViewModel : ViewModelBase
         if (idx < Steps.Count - 1) Steps.Move(idx, idx + 1);
     }
 
-    private void Save()
+    private async void Save()
     {
-        if (_currentFilePath == null) { SaveAs(); return; }
-        var path = _currentFilePath;
-        MacroSerializer.SaveProfileAsync(BuildProfile(), path).ContinueWith(t =>
+        if (_currentFilePath == null)
         {
-            Application.Current?.Dispatcher.BeginInvoke(() =>
-                Status = t.IsFaulted ? $"Save failed: {t.Exception?.GetBaseException().Message}" : "Saved");
-        });
+            SaveAs();
+            return;
+        }
+
+        var path = _currentFilePath;
+        try
+        {
+            await MacroSerializer.SaveProfileAsync(BuildProfile(), path);
+            Status = "Saved";
+        }
+        catch (Exception ex)
+        {
+            Status = $"Save failed: {ex.GetBaseException().Message}";
+        }
     }
 
-    private void SaveAs()
+    private async void SaveAs()
     {
         var dlg = new SaveFileDialog { Filter = "Macro files (*.json)|*.json|All files (*.*)|*.*", DefaultExt = ".json" };
         if (dlg.ShowDialog() == true)
@@ -363,26 +372,41 @@ public class SequencerViewModel : ViewModelBase
             _currentFilePath = dlg.FileName;
             var path = _currentFilePath;
             var name = System.IO.Path.GetFileName(path);
-            MacroSerializer.SaveProfileAsync(BuildProfile(), path).ContinueWith(t =>
+            try
             {
-                Application.Current?.Dispatcher.BeginInvoke(() =>
-                    Status = t.IsFaulted ? $"Save failed: {t.Exception?.GetBaseException().Message}" : $"Saved to {name}");
-            });
+                await MacroSerializer.SaveProfileAsync(BuildProfile(), path);
+                Status = $"Saved to {name}";
+            }
+            catch (Exception ex)
+            {
+                Status = $"Save failed: {ex.GetBaseException().Message}";
+            }
         }
     }
 
-    private void Open()
+    private async void Open()
     {
         var dlg = new OpenFileDialog { Filter = "Macro files (*.json)|*.json|All files (*.*)|*.*" };
         if (dlg.ShowDialog() == true)
         {
             _currentFilePath = dlg.FileName;
-            var task = MacroSerializer.LoadProfileAsync(_currentFilePath);
-            task.ContinueWith(t =>
+            try
             {
-                if (t.Result != null)
-                    Application.Current?.Dispatcher.Invoke(() => LoadProfile(t.Result));
-            });
+                var profile = await MacroSerializer.LoadProfileAsync(_currentFilePath);
+                if (profile != null)
+                {
+                    LoadProfile(profile);
+                    Status = $"Loaded {profile.Macro.Steps.Count} steps";
+                }
+                else
+                {
+                    Status = "Open failed: file is empty or invalid.";
+                }
+            }
+            catch (Exception ex)
+            {
+                Status = $"Open failed: {ex.GetBaseException().Message}";
+            }
         }
     }
 

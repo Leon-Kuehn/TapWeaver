@@ -51,40 +51,6 @@ public class MainViewModel : ViewModelBase, IDisposable
         }
     }
 
-    public bool UseDarkMode
-    {
-        get => _appSettings.UseDarkMode;
-        set
-        {
-            if (_appSettings.UseDarkMode == value) return;
-            _appSettings.UseDarkMode = value;
-            OnPropertyChanged();
-            ThemeService.ApplyTheme(value);
-            AppSettingsSerializer.Save(_appSettings);
-        }
-    }
-
-    public bool CompactMode
-    {
-        get => _appSettings.CompactMode;
-        set
-        {
-            if (_appSettings.CompactMode == value) return;
-            _appSettings.CompactMode = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(RecorderTabHeader));
-            OnPropertyChanged(nameof(SequencerTabHeader));
-            OnPropertyChanged(nameof(AutoClickerTabHeader));
-            OnPropertyChanged(nameof(SettingsTabHeader));
-            AppSettingsSerializer.Save(_appSettings);
-        }
-    }
-
-    public string RecorderTabHeader => CompactMode ? "Rec" : "Recorder";
-    public string SequencerTabHeader => CompactMode ? "Seq" : "Sequencer";
-    public string AutoClickerTabHeader => CompactMode ? "Click" : "Auto Clicker";
-    public string SettingsTabHeader => "Settings";
-
     public AppPage SelectedPage
     {
         get => _selectedPage;
@@ -137,12 +103,21 @@ public class MainViewModel : ViewModelBase, IDisposable
     public MainViewModel()
     {
         _appSettings = AppSettingsSerializer.Load();
+        bool settingsChanged = false;
         if (!_appSettings.UseDarkMode)
         {
             _appSettings.UseDarkMode = true;
-            AppSettingsSerializer.Save(_appSettings);
+            settingsChanged = true;
         }
-        ThemeService.ApplyTheme(_appSettings.UseDarkMode);
+        if (_appSettings.CompactMode)
+        {
+            _appSettings.CompactMode = false;
+            settingsChanged = true;
+        }
+        if (settingsChanged)
+            AppSettingsSerializer.Save(_appSettings);
+
+        ThemeService.ApplyTheme(true);
 
         _macroRecorder      = new MacroRecorder();
         _macroPlayer        = new MacroPlayer();

@@ -110,21 +110,11 @@
 
     <Style x:Key="HideInCompactModeTextStyle" TargetType="TextBlock">
         <Setter Property="Visibility" Value="Visible"/>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding DataContext.CompactMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="CompactSubtitleStyle" TargetType="TextBlock" BasedOn="{StaticResource FieldLabelStyle}">
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="Margin" Value="0,2,0,0"/>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding DataContext.CompactMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="SidebarNavButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
