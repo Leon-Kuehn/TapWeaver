@@ -120,6 +120,19 @@
                                 <CheckBox Content="Route input to selected window"
                                           IsChecked="{Binding RouteInputToSelectedWindow, UpdateSourceTrigger=PropertyChanged}"
                                           IsEnabled="{Binding IsEditable}"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0"
+                                            IsEnabled="{Binding RouteInputToSelectedWindow}">
+                                    <TextBlock Text="Input Method:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <ComboBox Width="200"
+                                              ItemsSource="{Binding AvailableStrategies}"
+                                              SelectedItem="{Binding SelectedWindowInputStrategy, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource StrategyDisplayConverter}}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
                                 <TextBlock Text="{Binding WindowRoutingInfo}"
                                            Foreground="{StaticResource TextSecondaryBrush}"
                                            FontSize="11"

@@ -27,6 +27,7 @@ public class SequencerViewModel : ViewModelBase
     private string _status = "Idle";
     private string _windowRoutingInfo = "Keyboard input routing disabled.";
     private bool _routeInputToSelectedWindow;
+    private WindowInputStrategy _selectedWindowInputStrategy = WindowInputStrategy.FocusSwitch;
     private IntPtr _targetWindowHandle = IntPtr.Zero;
     private WindowOption? _selectedWindow;
 
@@ -48,6 +49,18 @@ public class SequencerViewModel : ViewModelBase
     public string Status { get => _status; set => SetProperty(ref _status, value); }
     public string WindowRoutingInfo { get => _windowRoutingInfo; set => SetProperty(ref _windowRoutingInfo, value); }
     public bool IsPlaying => _player.IsPlaying;
+
+    public WindowInputStrategy SelectedWindowInputStrategy
+    {
+        get => _selectedWindowInputStrategy;
+        set
+        {
+            if (SetProperty(ref _selectedWindowInputStrategy, value))
+                SyncStrategyToPlayer();
+        }
+    }
+
+    public IEnumerable<WindowInputStrategy> AvailableStrategies => Enum.GetValues<WindowInputStrategy>();
 
     public bool RouteInputToSelectedWindow
     {
@@ -155,6 +168,7 @@ public class SequencerViewModel : ViewModelBase
         _player = player;
         _routeInputToSelectedWindow = settings.RouteInputToSelectedWindow;
         _targetWindowHandle = new IntPtr(settings.TargetWindowHandle);
+        _selectedWindowInputStrategy = WindowInputStrategy.FocusSwitch;
 
         _player.StepChanged += idx => Application.Current?.Dispatcher.BeginInvoke(() =>
         {
@@ -227,6 +241,8 @@ public class SequencerViewModel : ViewModelBase
             _routeInputToSelectedWindow = false;
             WindowRoutingInfo = "Select a target window before enabling routing.";
         }
+
+        SyncStrategyToPlayer();
     }
 
     public void LoadMacro(Macro macro)
@@ -445,6 +461,11 @@ public class SequencerViewModel : ViewModelBase
     {
         _player.RouteInputToSelectedWindow = _routeInputToSelectedWindow && _targetWindowHandle != IntPtr.Zero;
         _player.TargetWindowHandle = _targetWindowHandle;
+    }
+
+    private void SyncStrategyToPlayer()
+    {
+        _player.InputStrategy = SelectedWindowInputStrategy;
     }
 
     public sealed class WindowOption

@@ -41,6 +41,15 @@ public class MacroPlayer
     /// </summary>
     public IntPtr TargetWindowHandle { get; set; }
 
+    /// <summary>
+    /// Defines how keyboard input is delivered when routing to a selected window.
+    /// </summary>
+    public WindowInputStrategy InputStrategy
+    {
+        get => _windowInputSender.Strategy;
+        set => _windowInputSender.Strategy = value;
+    }
+
     public static ushort GetVkCode(string key)
     {
         return KeyboardKeyMap.TryGetVirtualKey(key, out var vkCode)
