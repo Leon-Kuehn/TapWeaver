@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Colors.xaml"/>
                 <ResourceDictionary Source="Themes/Styles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/BaseStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

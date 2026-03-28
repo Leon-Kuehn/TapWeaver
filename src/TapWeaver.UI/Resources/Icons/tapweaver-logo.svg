@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="TapWeaver logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1E1E2E"/>
+      <stop offset="100%" stop-color="#2A2A3E"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7FDBFF"/>
+      <stop offset="100%" stop-color="#4FC3F7"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="12" y="12" width="232" height="232" rx="52" fill="url(#bg)"/>
+
+  <rect x="54" y="56" width="148" height="146" rx="28" fill="none" stroke="#3A3A5C" stroke-width="8"/>
+  <rect x="70" y="74" width="116" height="16" rx="8" fill="#3A3A5C"/>
+
+  <path d="M74 98 C94 82 118 164 128 164 C138 164 160 82 182 98"
+        fill="none" stroke="url(#accent)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M182 98 C200 114 190 146 170 160"
+        fill="none" stroke="url(#accent)" stroke-width="16" stroke-linecap="round"/>
+
+  <circle cx="128" cy="164" r="12" fill="#4FC3F7"/>
+  <path d="M120 164 L136 164" stroke="#1E1E2E" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -10,7 +10,7 @@
     <AssemblyName>TapWeaver</AssemblyName>
     <ApplicationTitle>TapWeaver</ApplicationTitle>
     <ApplicationVersion>1.0.0.0</ApplicationVersion>
-    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icons\tapweaver.ico</ApplicationIcon>
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishDir>$(MSBuildThisFileDirectory)..\..\artifacts\win-x64\</PublishDir>
@@ -23,9 +23,10 @@
     <PackageReference Include="SharpVectors.Wpf" Version="1.8.5" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\AppIcon.svg" />
-    <Resource Include="Assets\AppIcon.png" />
+    <Resource Include="Resources\Icons\tapweaver-logo.svg" />
     <Resource Include="Assets\Icons\*.svg" />
-    <None Include="Assets\AppIcon.ico" />
+    <Resource Include="Resources\Styles\BaseStyles.xaml" />
+    <None Include="Resources\Icons\tapweaver.ico" />
+    <None Include="Resources\Icons\*.png" />
   </ItemGroup>
 </Project>
